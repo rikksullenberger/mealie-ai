@@ -13,7 +13,7 @@ const routes = {
     baseRoute = routes.groupRecipeActions;
     itemRoute = routes.groupRecipeActionsId;
 
-    async triggerAction(id: string | number, recipeSlug: string) {
-      return await this.requests.post(routes.groupRecipeActionsIdTriggerRecipeSlug(id, recipeSlug), {});
+    async triggerAction(id: string | number, recipeSlug: string, scaledAmount: number) {
+      return await this.requests.post(routes.groupRecipeActionsIdTriggerRecipeSlug(id, recipeSlug), {scaledAmount});
     }
   }
