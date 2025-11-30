@@ -32,8 +32,8 @@ This fork adds **AI-powered image generation** for recipes:
 
 1. **Clone this repository:**
    ```bash
-   git clone https://github.com/rikksullenber/mealie.git
-   cd mealie
+   git clone https://github.com/rikksullenber/mealie-ai.git
+   cd mealie-ai
    ```
 
 2. **Configure OpenAI API Key:**
