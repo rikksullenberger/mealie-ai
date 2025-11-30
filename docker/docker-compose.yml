@@ -14,7 +14,7 @@ services:
     environment:
       ALLOW_SIGNUP: "false"
       LOG_LEVEL: "DEBUG"
-      OPENAI_API_KEY: "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"
+      OPENAI_API_KEY: "<<< You OpenAI API key >>>"
 
       DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
       # =====================================
