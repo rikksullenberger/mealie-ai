@@ -142,3 +142,4 @@ If you find this fork useful, please consider:
 ## Disclaimer
 
 This is an unofficial fork and is not affiliated with or endorsed by the official Mealie project. Use at your own risk, especially regarding OpenAI API costs.
+# mealie-ai
