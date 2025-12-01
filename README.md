@@ -58,13 +58,16 @@ This fork adds **AI-powered image generation** for recipes:
 
 Required environment variables for AI features:
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `OPENAI_API_KEY` | Your OpenAI API key | Yes (for AI features) |
-| `OPENAI_MODEL` | OpenAI model to use | No (defaults to `gpt-4o`) |
-| `OPENAI_ENABLE_IMAGE_SERVICES` | Enable image generation | No (defaults to `true`) |
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `OPENAI_API_KEY` | Your OpenAI API key | - | Yes (for AI features) |
+| `OPENAI_MODEL` | OpenAI model to use | `gpt-3.5-turbo` | No |
+| `OPENAI_ENABLE_IMAGE_SERVICES` | Enable image generation | `true` | No |
 
-**Important:** If `OPENAI_API_KEY` is not set, the AI recipe generation menu option will be hidden from the UI.
+**Important:** 
+- If `OPENAI_API_KEY` is not set, the AI recipe generation menu option will be hidden from the UI.
+- `gpt-3.5-turbo` is used by default for maximum compatibility with JSON mode features.
+- You can also use `gpt-4o` or `gpt-4` (note: `gpt-4` does not support JSON mode).
 
 ## Usage
 
@@ -78,9 +81,51 @@ Required environment variables for AI features:
 
 ### Cost Considerations
 
-- **Recipe Generation**: Uses GPT-4o (standard OpenAI pricing)
+- **Recipe Generation**: Uses GPT-3.5-turbo (standard OpenAI pricing, ~$0.50-1.50 per million tokens)
 - **Image Generation**: Uses DALL-E 3 (~$0.04-0.08 per image depending on quality settings)
 - Image generation is **optional** and disabled by default to prevent unexpected charges
+
+## Deployment to Remote Server
+
+This repository includes scripts to deploy the AI-enabled Mealie to a remote server using Docker Hub.
+
+### Prerequisites
+
+- Docker Hub account
+- Remote server with Docker and Docker Compose installed
+- OpenAI API key
+
+### Quick Deployment
+
+1. **Configure deployment:**
+   
+   Edit `docker-compose.deploy.yml`:
+   ```yaml
+   OPENAI_API_KEY: "your-openai-api-key-here"
+   ```
+
+2. **Update deployment script:**
+   
+   Edit `deploy-to-remote.py` with your server credentials:
+   ```python
+   hostname = "your-server-ip"
+   username = "your-username"
+   password = "your-password"
+   ```
+
+3. **Run deployment:**
+   ```bash
+   python3 deploy-to-remote.py
+   ```
+
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Remote Server Access
+
+After deployment, access your instance at:
+```
+http://your-server-ip:9099
+```
 
 ## Development
 
