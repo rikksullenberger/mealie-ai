@@ -1,7 +1,7 @@
 ###############################################
 # Frontend Build
 ###############################################
-FROM node:24@sha256:aa648b387728c25f81ff811799bbf8de39df66d7e2d9b3ab55cc6300cb9175d9 \
+FROM node:24 \
     AS frontend-builder
 
 WORKDIR /frontend
@@ -21,7 +21,7 @@ RUN yarn generate
 ###############################################
 # Base Image - Python
 ###############################################
-FROM python:3.12-slim@sha256:2267adc248a477c1f1a852a07a5a224d42abe54c28aafa572efa157dfb001bba \
+FROM python:3.12-slim \
     AS python-base
 
 ENV MEALIE_HOME="/app"
