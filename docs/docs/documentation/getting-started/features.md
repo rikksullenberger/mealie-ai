@@ -6,7 +6,11 @@
 
 ### Creating Recipes
 
-Mealie offers two main ways to create recipes. You can use the integrated recipe-scraper to create recipes from hundreds of websites, or you can create recipes manually using the recipe editor.
+Mealie offers main ways to create recipes. You can use the integrated recipe-scraper to create recipes from hundreds of websites, create recipes manually using the recipe editor, or **generate new recipes using AI**.
+
+### AI Recipe Generation
+
+Generate complete recipes including ingredients, instructions, and descriptions just by providing a recipe name. Perfect for when you have an idea but need the details filled in.
 
 [Creation Demo](https://demo.mealie.io/g/home/r/create/url){ .md-button .md-button--primary .align-right }
 
@@ -28,6 +32,10 @@ You can access these options on your installation at the `/group/migrations` pag
 
 
 [Import Demo](https://demo.mealie.io/group/migrations){ .md-button .md-button--primary }
+
+### AI Image Generation
+
+Mealie AI can automatically generate images for your recipes if they are missing one. This feature uses DALL-E to interpret the recipe name and generate a visually appealing image to match. Note that this requires configuring an OpenAI API key.
 
 
 ### Organizing Recipes
