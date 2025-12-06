@@ -21,8 +21,8 @@ services:
       # =====================================
       OPENAI_ENABLED: "true"
       # IMPORTANT: Replace with your actual OpenAI API key
-      OPENAI_API_KEY: "CHANGE_ME"
-      OPENAI_MODEL: "gpt-3.5-turbo" # Options: "gpt-4", "gpt-3.5-turbo", "gpt-4o", etc.
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: "gpt-4o" # Options: "gpt-4", "gpt-3.5-turbo", "gpt-4o", etc.
       # OPENAI_BASE_URL: "https://api.openai.com/v1"  # Optional: custom endpoint
       # OPENAI_WORKERS: "1"  # Optional: concurrent workers
       # OPENAI_SEND_DATABASE_DATA: "true"  # Optional: send DB context

@@ -32,3 +32,4 @@ venv
 /mealie/frontend/
 
 crowdin.yml
+.env
