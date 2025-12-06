@@ -127,7 +127,7 @@ class RecipeSummary(MealieModel):
     group_id: UUID4 = Field(default_factory=uuid4, validate_default=True)
 
     name: str | None = None
-    slug: Annotated[str, Field(validate_default=True)] = ""
+    slug: str = Field("", validate_default=True)
     image: Any | None = None
     recipe_servings: float = 0
     recipe_yield_quantity: float = 0
@@ -139,8 +139,8 @@ class RecipeSummary(MealieModel):
     perform_time: str | None = None
 
     description: str | None = ""
-    recipe_category: Annotated[list[RecipeCategory] | None, Field(validate_default=True)] | None = []
-    tags: Annotated[list[RecipeTag] | None, Field(validate_default=True)] = []
+    recipe_category: list[RecipeCategory] | None = Field(default=[], validate_default=True)
+    tags: list[RecipeTag] | None = Field(default=[], validate_default=True)
     tools: list[RecipeTool] = []
     rating: float | None = None
     org_url: str | None = Field(None, alias="orgURL")
@@ -181,7 +181,7 @@ class RecipePagination(PaginationBase):
 
 
 class Recipe(RecipeSummary):
-    recipe_ingredient: Annotated[list[RecipeIngredient], Field(validate_default=True)] = []
+    recipe_ingredient: list[RecipeIngredient] = Field(default=[], validate_default=True)
     recipe_instructions: list[RecipeStep] | None = []
     nutrition: Nutrition | None = None
 

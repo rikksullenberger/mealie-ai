@@ -10,14 +10,14 @@ from ..recipe.recipe_category import RecipeCategoryResponse
 
 class CustomPageBase(MealieModel):
     name: str
-    slug: Annotated[str | None, Field(validate_default=True)]
+    slug: str | None = Field(default=None, validate_default=True)
     position: int
     categories: list[RecipeCategoryResponse] = []
     model_config = ConfigDict(from_attributes=True)
 
     @field_validator("slug", mode="before")
-    def validate_slug(slug: str, values):
-        name: str = values["name"]
+    def validate_slug(slug: str | None, info):
+        name: str = info.data.get("name", "")
         calc_slug: str = slugify(name)
 
         if slug != calc_slug:
