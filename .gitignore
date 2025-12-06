@@ -177,3 +177,8 @@ frontend/eslint.config.deprecated.js
 *.key
 *.pem
 credentials*
+
+# Debug & Deployment Artifacts
+debug_recipe.py
+docker/debug_logs.txt
+mealie-ai.tar

@@ -60,6 +60,12 @@ export default defineNuxtComponent({
 
     const subpages = computed<MenuItem[]>(() => [
       {
+        icon: $globals.icons.autoFix,
+        text: i18n.t("new-recipe.generate-with-ai"),
+        value: "ai",
+        hide: !$appInfo.enableOpenai,
+      },
+      {
         icon: $globals.icons.link,
         text: i18n.t("recipe.import-with-url"),
         value: "url",

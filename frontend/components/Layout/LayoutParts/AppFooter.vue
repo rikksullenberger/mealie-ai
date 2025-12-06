@@ -17,14 +17,14 @@
         <v-btn
           color="white"
           icon
-          href="https://github.com/mealie-recipes/mealie"
+          href="https://github.com/rikksullenberger/mealie-ai"
           target="_blank"
         >
           <v-icon>
             {{ $globals.icons.github }}
           </v-icon>
         </v-btn>
-        {{ new Date().getFullYear() }} — <strong> Mealie </strong>
+        {{ new Date().getFullYear() }} — <strong> Mealie AI </strong>
       </v-col>
     </v-row>
   </v-footer>

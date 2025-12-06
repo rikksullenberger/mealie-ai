@@ -10,24 +10,24 @@ services:
     volumes:
       - mealie-data:/app/data/
     ports:
-      - 9091:9000
+      - 9099:9000
     environment:
       ALLOW_SIGNUP: "false"
       LOG_LEVEL: "DEBUG"
 
       DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
-      
+
       # =====================================
       # OpenAI Configuration (for AI Recipe Generator)
       # =====================================
       OPENAI_ENABLED: "true"
-      OPENAI_API_KEY: "your-openai-api-key-here"
-      OPENAI_MODEL: ""  # or "gpt-3.5-turbo"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      OPENAI_MODEL: "${OPENAI_MODEL}"
       # OPENAI_BASE_URL: "https://api.openai.com/v1"  # Optional: custom endpoint
       # OPENAI_WORKERS: "1"  # Optional: concurrent workers
       # OPENAI_SEND_DATABASE_DATA: "true"  # Optional: send DB context
       # OPENAI_ENABLE_IMAGE_SERVICES: "true"  # Optional: enable image features
-      
+
       # =====================================
       # Postgres Config (Optional)
       # =====================================
@@ -36,7 +36,6 @@ services:
       POSTGRES_SERVER: postgres
       POSTGRES_PORT: 5432
       POSTGRES_DB: mealie
-      
       # =====================================
       # Email Configuration (Optional)
       # =====================================

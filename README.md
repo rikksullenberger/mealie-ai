@@ -1,4 +1,4 @@
-# Mealie with AI Image Generation
+# Mealie AI
 
 A fork of [Mealie](https://github.com/mealie-recipes/mealie) with enhanced AI capabilities for automatic recipe image generation.
 

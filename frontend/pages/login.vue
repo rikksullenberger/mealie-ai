@@ -49,7 +49,7 @@
         dark
       >
         <v-toolbar-title class="text-h4 text-center">
-          Mealie
+          Mealie AI
         </v-toolbar-title>
       </v-toolbar>
       <AppLogo :size="100" />
@@ -182,7 +182,7 @@
             {
               text: $t('about.github'),
               icon: $globals.icons.github,
-              href: 'https://github.com/mealie-recipes/mealie',
+              href: 'https://github.com/rikksullenberger/mealie-ai',
             },
             {
               text: $t('about.docs'),

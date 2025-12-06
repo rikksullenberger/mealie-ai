@@ -28,14 +28,14 @@ export default defineNuxtConfig({
     baseURL: process.env.SUB_PATH || "",
 
     head: {
-      title: "Mealie",
+      title: "Mealie AI",
       meta: [
         { property: "og:type", content: "website" },
-        { property: "og:title", content: "Mealie" },
-        { property: "og:site_name", content: "Mealie" },
+        { property: "og:title", content: "Mealie AI" },
+        { property: "og:site_name", content: "Mealie AI" },
         {
           property: "og:description",
-          content: "Mealie is a recipe management app for your kitchen.",
+          content: "Mealie AI is a recipe management app for your kitchen.",
         },
         {
           property: "og:image",
@@ -46,7 +46,7 @@ export default defineNuxtConfig({
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         {
           name: "description",
-          content: "Mealie is a recipe management app for your kitchen.",
+          content: "Mealie AI is a recipe management app for your kitchen.",
         },
       ],
       link: [
@@ -229,15 +229,15 @@ export default defineNuxtConfig({
     },
     includeAssets: ["favicon.ico", "apple-touch-icon.png", "safari-pinned-tab.svg"],
     manifest: {
-      name: "Mealie",
-      short_name: "Mealie",
+      name: "Mealie AI",
+      short_name: "Mealie AI",
       id: "/",
       start_url: "/",
       scope: "/",
       display: "standalone",
       background_color: "#FFFFFF",
       theme_color: process.env.THEME_LIGHT_PRIMARY || "#E58325",
-      description: "Mealie is a recipe management and meal planning app",
+      description: "Mealie AI is a recipe management and meal planning app",
       lang: "en",
       display_override: [
         "standalone",
