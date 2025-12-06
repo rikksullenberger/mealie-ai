@@ -1,7 +1,7 @@
 # Maintainers
 
 ## Current Maintainers
-- Rikk Sullenberger (@rikksullenberger)
+- Rikk Sullenberger (@rikksullenberger) - AI Recipe & Image Generation
 
 ## Maintainers Guide
 
