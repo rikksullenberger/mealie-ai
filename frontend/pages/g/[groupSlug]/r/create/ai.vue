@@ -44,6 +44,12 @@
           hide-details
           :label="$t('new-recipe.generate-image')"
         />
+        <v-checkbox
+          v-model="autoTag"
+          color="primary"
+          hide-details
+          :label="$t('new-recipe.auto-tag-recipe')"
+        />
         <v-card-actions class="justify-center">
           <div style="width: 250px">
             <BaseButton
@@ -115,6 +121,7 @@ export default defineNuxtComponent({
 
     const prompt = ref<string>("");
     const includeImage = ref<boolean>(false);
+    const autoTag = ref<boolean>(false);
 
     function handleResponse(response: AxiosResponse<string> | null) {
       if (response?.status !== 201) {
@@ -143,7 +150,7 @@ export default defineNuxtComponent({
       state.errorMessage = "";
 
       try {
-        const { response } = await api.recipes.createOneFromAI(userPrompt, includeImage.value);
+        const { response } = await api.recipes.createOneFromAI(userPrompt, includeImage.value, autoTag.value);
         handleResponse(response);
       } catch (error: any) {
         state.error = true;
@@ -155,6 +162,7 @@ export default defineNuxtComponent({
     return {
       prompt,
       includeImage,
+      autoTag,
       stayInEditMode,
       parseRecipe,
       domAiForm,

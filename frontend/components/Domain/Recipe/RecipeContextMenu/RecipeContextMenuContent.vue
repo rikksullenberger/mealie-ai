@@ -262,6 +262,13 @@ const defaultItems: { [key: string]: ContextMenuItem } = {
     event: "duplicate",
     isPublic: false,
   },
+  autoTag: {
+    title: "Auto-Tag",
+    icon: $globals.icons.autoFix,
+    color: undefined,
+    event: "autoTag",
+    isPublic: false,
+  },
   mealplanner: {
     title: i18n.t("recipe.add-to-plan"),
     icon: $globals.icons.calendar,
@@ -443,6 +450,16 @@ const eventHandlers: { [key: string]: () => void | Promise<any> } = {
   },
   share: () => {
     shareDialog.value = true;
+  },
+  autoTag: async () => {
+    loading.value = true;
+    const { error } = await api.recipes.autoTag(props.slug);
+    if (!error) {
+      alert.success(i18n.t("events.message-sent"));
+      await refreshRecipe();
+    } else {
+      alert.error(i18n.t("events.something-went-wrong"));
+    }
   },
 };
 

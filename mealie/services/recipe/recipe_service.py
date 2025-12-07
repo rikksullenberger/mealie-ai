@@ -31,6 +31,7 @@ from mealie.schema.user.user import PrivateUser, UserRatingCreate
 from mealie.services._base_service import BaseService
 from mealie.services.household_services.household_service import HouseholdService
 from mealie.services.openai import OpenAIDataInjection, OpenAILocalImage, OpenAIService
+from mealie.schema.openai.auto_tag import OpenAIRecipeTags
 from mealie.services.recipe.recipe_data_service import RecipeDataService
 from mealie.services.scraper import cleaner
 
@@ -55,6 +56,23 @@ class RecipeServiceBase(BaseService):
         self.t = translator.t
 
         super().__init__()
+
+    def _transform_category_or_tag(self, data: dict, repo: RepositoryGeneric) -> dict:
+        slug = data.get("slug")
+        if not slug:
+            return data
+
+        # if the item exists, return the actual data
+        query = repo.get_one(slug, "slug")
+        if query:
+            return query.model_dump()
+
+        # otherwise, create the item
+        if repo.group_id:
+            data["group_id"] = repo.group_id
+            
+        new_item = repo.create(data)
+        return new_item.model_dump()
 
 
 class RecipeService(RecipeServiceBase):
@@ -212,19 +230,6 @@ class RecipeService(RecipeServiceBase):
             # default to the current user
             return str(self.user.id)
 
-    def _transform_category_or_tag(self, data: dict, repo: RepositoryGeneric) -> dict:
-        slug = data.get("slug")
-        if not slug:
-            return data
-
-        # if the item exists, return the actual data
-        query = repo.get_one(slug, "slug")
-        if query:
-            return query.model_dump()
-
-        # otherwise, create the item
-        new_item = repo.create(data)
-        return new_item.model_dump()
 
     def _process_recipe_data(self, key: str, data: list | dict | Any):
         if isinstance(data, list):
@@ -567,7 +572,7 @@ class RecipeService(RecipeServiceBase):
         return t_service.render(recipe, template)
 
 
-class OpenAIRecipeService(RecipeServiceBase):
+class OpenAIRecipeService(RecipeService):
     def _convert_recipe(self, openai_recipe: OpenAIRecipe) -> Recipe:
         return Recipe(
             user_id=self.user.id,
@@ -687,3 +692,80 @@ class OpenAIRecipeService(RecipeServiceBase):
             image_data = await openai_service.generate_image(image_prompt)
         
         return recipe, image_data
+
+    async def auto_tag_recipe(self, slug: str) -> Recipe:
+        self.logger.info(f"Auto-tagging processing: {slug}")
+        recipe = self.get_one(slug)
+        
+        # Prepare recipe data for AI
+        recipe_data = {
+            "name": recipe.name,
+            "description": recipe.description,
+            "ingredients": [ing.note for ing in recipe.recipe_ingredient if ing.note],
+            "instructions": [step.text for step in recipe.recipe_instructions if step.text],
+        }
+        
+        openai_service = OpenAIService()
+        prompt = openai_service.get_prompt(
+            "recipes.auto-tag",
+            data_injections=[
+                OpenAIDataInjection(
+                    description="Response data.",
+                    value=OpenAIRecipeTags,
+                )
+            ],
+        )
+        
+        try:
+            response_json = await openai_service.get_response(
+                prompt, 
+                json.dumps(recipe_data), 
+                force_json_response=True
+            )
+            
+            if not response_json:
+                raise ValueError("No response from OpenAI")
+
+            try:    
+                tags_data = OpenAIRecipeTags.parse_openai_response(response_json)
+            except Exception as e:
+                self.logger.error(f"JSON Validation failed for {slug}. Response: {response_json}")
+                raise e
+            
+            current_tags = [t.slug for t in recipe.tags] if recipe.tags else []
+            current_categories = [c.slug for c in recipe.recipe_category] if recipe.recipe_category else []
+            
+            new_tags = []
+            for tag_name in tags_data.tags:
+                tag_slug = create_recipe_slug(tag_name)
+                if tag_slug not in current_tags:
+                    tag_data = {"name": tag_name, "slug": tag_slug, "group_id": recipe.group_id}
+                    processed_tag = self._transform_category_or_tag(tag_data, self.repos.tags)
+                    new_tags.append(processed_tag)
+            
+            new_categories = []
+            for cat_name in tags_data.categories:
+                cat_slug = create_recipe_slug(cat_name)
+                if cat_slug not in current_categories:
+                    cat_data = {"name": cat_name, "slug": cat_slug, "group_id": recipe.group_id}
+                    processed_cat = self._transform_category_or_tag(cat_data, self.repos.categories)
+                    new_categories.append(processed_cat)
+
+            if not new_tags and not new_categories:
+                self.logger.info(f"No new tags or categories found for {slug}")
+                return recipe
+
+            # Update recipe
+            update_data = recipe.model_copy()
+            
+            final_tags = [t.model_dump() for t in recipe.tags] + new_tags
+            final_categories = [c.model_dump() for c in recipe.recipe_category] + new_categories
+            
+            update_data.tags = final_tags
+            update_data.recipe_category = final_categories
+            
+            return self.update_one(recipe.slug, update_data)
+
+        except Exception as e:
+            self.logger.error(f"Failed to auto-tag recipe {slug}: {e}")
+            raise

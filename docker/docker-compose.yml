@@ -10,11 +10,12 @@ services:
     volumes:
       - mealie-data:/app/data/
     ports:
-      - 9091:9000
+      - 9099:9000
     environment:
       ALLOW_SIGNUP: "false"
       LOG_LEVEL: "DEBUG"
-      OPENAI_API_KEY: "<<< You OpenAI API key >>>"
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: "gpt-3.5-turbo"
 
       DB_ENGINE: sqlite # Optional: 'sqlite', 'postgres'
       # =====================================

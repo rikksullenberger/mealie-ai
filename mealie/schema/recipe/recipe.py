@@ -112,6 +112,7 @@ class CreateRecipeByUrlBulk(BaseModel):
 class CreateRecipeAI(BaseModel):
     prompt: str
     include_image: bool = False
+    auto_tag: bool = False
 
 
 class CreateRecipe(MealieModel):

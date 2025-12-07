@@ -172,7 +172,7 @@ class RecipeBatchImageService(BaseService):
                          self.logger.info(f"Recipe {full_recipe.slug} has DB image but no valid files on disk. Generating new image.")
 
                     # Build prompt from recipe data
-                    prompt_parts = [f"A high quality, professional food photography shot of {full_recipe.name}."]
+                    prompt_parts = [f"A hyper-realistic, professional food photography shot of {full_recipe.name}. The image must be photorealistic and not cartoony or illustrated."]
 
                     if full_recipe.description:
                         prompt_parts.append(full_recipe.description)

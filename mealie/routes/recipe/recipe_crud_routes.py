@@ -61,6 +61,7 @@ from mealie.services.recipe.recipe_data_service import (
     NotAnImageError,
     RecipeDataService,
 )
+from mealie.core.config import get_app_settings
 from mealie.services.recipe.recipe_service import OpenAIRecipeService
 from mealie.services.scraper.recipe_bulk_scraper import RecipeBulkScraperService
 from mealie.services.scraper.scraped_extras import ScraperContext
@@ -115,6 +116,17 @@ class RecipeController(BaseRecipeController):
                 status_code=500, detail=ErrorResponse.respond(message="Unknown Error", exception=ex.__class__.__name__)
             )
 
+    async def _auto_tag_background(self, slug: str):
+        settings = get_app_settings()
+        if not settings.OPENAI_ENABLED:
+            return
+
+        openai_service = OpenAIRecipeService(self.repos, self.user, self.household, self.translator)
+        try:
+            await openai_service.auto_tag_recipe(slug)
+        except Exception as e:
+            self.logger.error(f"Failed to auto-tag recipe {slug}: {e}")
+
     # =======================================================================
     # URL Scraping Operations
 
@@ -142,12 +154,12 @@ class RecipeController(BaseRecipeController):
         return await self._create_recipe_from_web(req)
 
     @router.post("/create/url", status_code=201, response_model=str)
-    async def parse_recipe_url(self, req: ScrapeRecipe):
+    async def parse_recipe_url(self, req: ScrapeRecipe, bg_tasks: BackgroundTasks):
         """Takes in a URL and attempts to scrape data and load it into the database"""
 
-        return await self._create_recipe_from_web(req)
+        return await self._create_recipe_from_web(req, bg_tasks)
 
-    async def _create_recipe_from_web(self, req: ScrapeRecipe | ScrapeRecipeData):
+    async def _create_recipe_from_web(self, req: ScrapeRecipe | ScrapeRecipeData, bg_tasks: BackgroundTasks | None = None):
         if isinstance(req, ScrapeRecipeData):
             html = req.data
             url = ""
@@ -170,6 +182,9 @@ class RecipeController(BaseRecipeController):
         new_recipe = self.service.create_one(recipe)
 
         if new_recipe:
+            if bg_tasks:
+                bg_tasks.add_task(self._auto_tag_background, new_recipe.slug)
+
             self.publish_event(
                 event_type=EventTypes.recipe_created,
                 document_data=EventRecipeData(operation=EventOperation.create, recipe_slug=new_recipe.slug),
@@ -204,10 +219,13 @@ class RecipeController(BaseRecipeController):
     # Other Create Operations
 
     @router.post("/create/zip", status_code=201)
-    def create_recipe_from_zip(self, archive: UploadFile = File(...)):
+    def create_recipe_from_zip(self, bg_tasks: BackgroundTasks, archive: UploadFile = File(...)):
         """Create recipe from archive"""
         with get_temporary_zip_path() as temp_path:
             recipe = self.service.create_from_zip(archive, temp_path)
+            
+            bg_tasks.add_task(self._auto_tag_background, recipe.slug)
+
             self.publish_event(
                 event_type=EventTypes.recipe_created,
                 document_data=EventRecipeData(operation=EventOperation.create, recipe_slug=recipe.slug),
@@ -245,7 +263,7 @@ class RecipeController(BaseRecipeController):
         return recipe.slug
 
     @router.post("/create/ai", status_code=201, response_model=str)
-    async def create_recipe_from_ai(self, data: CreateRecipeAI):
+    async def create_recipe_from_ai(self, data: CreateRecipeAI, bg_tasks: BackgroundTasks):
         """Create a recipe from an AI prompt"""
         if not self.settings.OPENAI_ENABLED:
             raise HTTPException(
@@ -274,6 +292,9 @@ class RecipeController(BaseRecipeController):
                     url=urls.recipe_url(self.group.slug, new_recipe.slug, self.settings.BASE_URL),
                 ),
             )
+            
+            # Always auto-tag new AI recipes in the background
+            bg_tasks.add_task(self._auto_tag_background, new_recipe.slug)
 
             return new_recipe.slug
         except Exception as e:
@@ -402,7 +423,7 @@ class RecipeController(BaseRecipeController):
         return recipe
 
     @router.post("", status_code=201, response_model=str)
-    def create_one(self, data: CreateRecipe) -> str | None:
+    def create_one(self, data: CreateRecipe, bg_tasks: BackgroundTasks) -> str | None:
         """Takes in a JSON string and loads data into the database as a new entry"""
         try:
             new_recipe = self.service.create_one(data)
@@ -422,6 +443,8 @@ class RecipeController(BaseRecipeController):
                     url=urls.recipe_url(self.group.slug, new_recipe.slug, self.settings.BASE_URL),
                 ),
             )
+
+            bg_tasks.add_task(self._auto_tag_background, new_recipe.slug)
 
         return new_recipe.slug
 
@@ -674,6 +697,32 @@ class RecipeController(BaseRecipeController):
             self.handle_exceptions(e)
             return None
 
+    @router.post("/{slug}/auto-tag", tags=["Recipe: AI Services"])
+    async def auto_tag_recipe(self, slug: str):
+        """Auto-tag a recipe using OpenAI"""
+        if not self.settings.OPENAI_ENABLED:
+            raise HTTPException(
+                status_code=400,
+                detail=ErrorResponse.respond("OpenAI services are not enabled"),
+            )
+        
+        try:
+            recipe = self.repos.recipes.get_one(slug)
+            if not recipe:
+                raise HTTPException(status_code=404, detail="Recipe not found")
+            
+            openai_service = OpenAIRecipeService(self.repos, recipe.group_id)
+            updated_recipe = await openai_service.auto_tag_recipe(recipe)
+            
+            return SuccessResponse.respond(
+                message=f"Auto-tagged recipe: {updated_recipe.name}"
+            )
+        except Exception as e:
+            self.logger.error(f"Failed to auto-tag recipe {slug}: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail=ErrorResponse.respond(f"Failed to auto-tag recipe: {str(e)}"),
+            )
 
     @router.post("/{slug}/assets", response_model=RecipeAsset, tags=["Recipe: Images and Assets"])
     def upload_recipe_asset(

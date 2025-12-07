@@ -47,6 +47,7 @@ const routes = {
 
   recipesRecipeSlug: (recipe_slug: string) => `${prefix}/recipes/${recipe_slug}`,
   recipesRecipeSlugImage: (recipe_slug: string) => `${prefix}/recipes/${recipe_slug}/image`,
+  recipesRecipeSlugAutoTag: (recipe_slug: string) => `${prefix}/recipes/${recipe_slug}/auto-tag`,
   recipesRecipeSlugImageAiGenerate: (recipe_slug: string) => `${prefix}/recipes/${recipe_slug}/image/ai-generate`,
   recipesRecipeSlugImageAiRegenerate: (recipe_slug: string) => `${prefix}/recipes/${recipe_slug}/image/ai-regenerate`,
   recipesRecipeSlugAssets: (recipe_slug: string) => `${prefix}/recipes/${recipe_slug}/assets`,
@@ -149,6 +150,10 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
     return this.requests.post<string>(routes.recipesRecipeSlugImageAiGenerate(slug), {});
   }
 
+  autoTag(slug: string) {
+    return this.requests.post<string>(routes.recipesRecipeSlugAutoTag(slug), {});
+  }
+
   regenerateAiImage(slug: string) {
     return this.requests.post<string>(routes.recipesRecipeSlugImageAiRegenerate(slug), {});
   }
@@ -189,8 +194,8 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
     return await this.requests.post<string>(apiRoute, formData);
   }
 
-  async createOneFromAI(prompt: string, includeImage = false) {
-    return await this.requests.post<string>(routes.recipesCreateFromAI, { prompt, include_image: includeImage });
+  async createOneFromAI(prompt: string, includeImage = false, autoTag = false) {
+    return await this.requests.post<string>(routes.recipesCreateFromAI, { prompt, include_image: includeImage, auto_tag: autoTag });
   }
 
   async parseIngredients(parser: Parser, ingredients: Array<string>) {

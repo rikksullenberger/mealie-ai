@@ -231,6 +231,19 @@ export default defineNuxtComponent({
       }
     }
 
+    async function handleAutoTagAll() {
+      state.actionLoading = true;
+      try {
+        await adminApi.maintenance.autoTagAll();
+        alert.success("Batch auto-tagging started in the background.");
+      } catch (e) {
+        console.error("Failed to start auto-tagging", e);
+        alert.error("Failed to start auto-tagging.");
+      } finally {
+        state.actionLoading = false;
+      }
+    }
+
     const actions = [
       {
         name: i18n.t("admin.maintenance.action-clean-directories-name"),
@@ -251,6 +264,11 @@ export default defineNuxtComponent({
         name: "Generate Missing Images (AI)",
         handler: handleGenerateMissingImages,
         subtitle: "Scan all recipes and generate AI images for those missing them. Runs in background.",
+      },
+      {
+        name: "Auto-Tag All Recipes (AI)",
+        handler: handleAutoTagAll,
+        subtitle: "Scan all recipes and apply categories and tags using AI. Runs in background.",
       },
     ];
 

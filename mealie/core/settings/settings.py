@@ -390,7 +390,7 @@ class AppSettings(AppLoggingSettings):
     """The base URL for the OpenAI API. Leave this unset for most usecases"""
     OPENAI_API_KEY: MaskedNoneString = None
     """Your OpenAI API key. Required to enable OpenAI features"""
-    OPENAI_MODEL: str = "gpt-4o"
+    OPENAI_MODEL: str = "gpt-3.5-turbo"
     """Which OpenAI model to send requests to. Leave this unset for most usecases"""
     OPENAI_CUSTOM_HEADERS: dict[str, str] = {}
     """Custom HTTP headers to send with each OpenAI request"""
@@ -471,7 +471,7 @@ def app_settings_constructor(data_dir: Path, production: bool, env_file: Path, e
         "SECRET": determine_secrets(data_dir, ".secret", production),
         "SESSION_SECRET": determine_secrets(data_dir, ".session_secret", production),
         "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY"),
-        "OPENAI_MODEL": os.environ.get("OPENAI_MODEL"),
+        "OPENAI_MODEL": os.environ.get("OPENAI_MODEL", "gpt-3.5-turbo"),
     }
     app_settings = AppSettings(
         _env_file=env_file,  # type: ignore
