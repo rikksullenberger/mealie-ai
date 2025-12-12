@@ -15,6 +15,7 @@ import RecipePage from "~/components/Domain/Recipe/RecipePage/RecipePage.vue";
 import { usePublicExploreApi } from "~/composables/api/api-client";
 import { useRecipe } from "~/composables/recipes";
 import type { Recipe } from "~/lib/api/types/recipe";
+import { usePageState, PageMode } from "~/composables/recipe-page/shared-state";
 
 const $auth = useMealieAuth();
 const { isOwnGroup } = useLoggedInState();
@@ -54,6 +55,14 @@ if (isOwnGroup.value) {
 else {
   onMounted(loadPublicRecipe);
 }
+
+// Check for edit query parameter and enter edit mode if present
+const pageState = usePageState(slug);
+onMounted(() => {
+  if (route.query.edit === "true") {
+    pageState.setMode(PageMode.EDIT);
+  }
+});
 
 whenever(
   () => recipe.value,

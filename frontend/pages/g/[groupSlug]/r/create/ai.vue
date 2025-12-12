@@ -33,12 +33,6 @@
           :label="$t('recipe.stay-in-edit-mode')"
         />
         <v-checkbox
-          v-model="parseRecipe"
-          color="primary"
-          hide-details
-          :label="$t('recipe.parse-recipe-ingredients-after-import')"
-        />
-        <v-checkbox
           v-model="includeImage"
           color="primary"
           hide-details
@@ -117,7 +111,7 @@ export default defineNuxtComponent({
       stayInEditMode,
       parseRecipe,
       navigateToRecipe,
-    } = useNewRecipeOptions();
+    } = useNewRecipeOptions({ enableParseRecipe: false });
 
     const prompt = ref<string>("");
     const includeImage = ref<boolean>(false);

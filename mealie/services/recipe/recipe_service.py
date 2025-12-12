@@ -723,17 +723,23 @@ class OpenAIRecipeService(RecipeService):
                 force_json_response=True
             )
             
+            self.logger.info(f"OpenAI response for {slug}: {response_json}")
+            
             if not response_json:
                 raise ValueError("No response from OpenAI")
 
             try:    
                 tags_data = OpenAIRecipeTags.parse_openai_response(response_json)
+                self.logger.info(f"Parsed tags data for {slug}: categories={tags_data.categories}, tags={tags_data.tags}")
             except Exception as e:
                 self.logger.error(f"JSON Validation failed for {slug}. Response: {response_json}")
                 raise e
             
             current_tags = [t.slug for t in recipe.tags] if recipe.tags else []
             current_categories = [c.slug for c in recipe.recipe_category] if recipe.recipe_category else []
+            
+            self.logger.info(f"Current tags for {slug}: {current_tags}")
+            self.logger.info(f"Current categories for {slug}: {current_categories}")
             
             new_tags = []
             for tag_name in tags_data.tags:
@@ -742,6 +748,7 @@ class OpenAIRecipeService(RecipeService):
                     tag_data = {"name": tag_name, "slug": tag_slug, "group_id": recipe.group_id}
                     processed_tag = self._transform_category_or_tag(tag_data, self.repos.tags)
                     new_tags.append(processed_tag)
+                    self.logger.info(f"Adding new tag for {slug}: {tag_name} (slug: {tag_slug})")
             
             new_categories = []
             for cat_name in tags_data.categories:
@@ -750,21 +757,34 @@ class OpenAIRecipeService(RecipeService):
                     cat_data = {"name": cat_name, "slug": cat_slug, "group_id": recipe.group_id}
                     processed_cat = self._transform_category_or_tag(cat_data, self.repos.categories)
                     new_categories.append(processed_cat)
+                    self.logger.info(f"Adding new category for {slug}: {cat_name} (slug: {cat_slug})")
 
             if not new_tags and not new_categories:
                 self.logger.info(f"No new tags or categories found for {slug}")
                 return recipe
 
-            # Update recipe
+            # Update recipe - keep existing tags as objects, convert new tag dicts to objects
             update_data = recipe.model_copy()
             
-            final_tags = [t.model_dump() for t in recipe.tags] + new_tags
-            final_categories = [c.model_dump() for c in recipe.recipe_category] + new_categories
+            # Convert new tag/category dicts to proper Pydantic objects
+            from mealie.schema.recipe.recipe import RecipeTag, RecipeCategory
             
-            update_data.tags = final_tags
-            update_data.recipe_category = final_categories
+            new_tag_objects = [RecipeTag(**tag) for tag in new_tags]
+            new_category_objects = [RecipeCategory(**cat) for cat in new_categories]
             
-            return self.update_one(recipe.slug, update_data)
+            # Combine existing objects with new objects
+            all_tags = list(recipe.tags) + new_tag_objects if recipe.tags else new_tag_objects
+            all_categories = list(recipe.recipe_category) + new_category_objects if recipe.recipe_category else new_category_objects
+            
+            self.logger.info(f"Final tags for {slug}: {[t.name for t in all_tags]}")
+            self.logger.info(f"Final categories for {slug}: {[c.name for c in all_categories]}")
+            
+            update_data.tags = all_tags
+            update_data.recipe_category = all_categories
+            
+            updated_recipe = self.update_one(recipe.slug, update_data)
+            self.logger.info(f"Successfully updated recipe {slug} with auto-tags")
+            return updated_recipe
 
         except Exception as e:
             self.logger.error(f"Failed to auto-tag recipe {slug}: {e}")

@@ -293,8 +293,13 @@ class RecipeController(BaseRecipeController):
                 ),
             )
             
-            # Always auto-tag new AI recipes in the background
-            bg_tasks.add_task(self._auto_tag_background, new_recipe.slug)
+            # Auto-tag if requested (must be done before returning so tags are visible)
+            if data.auto_tag:
+                try:
+                    await openai_recipe_service.auto_tag_recipe(new_recipe.slug)
+                except Exception as e:
+                    self.logger.error(f"Failed to auto-tag recipe {new_recipe.slug}: {e}")
+                    # Don't fail the whole request if auto-tagging fails
 
             return new_recipe.slug
         except Exception as e:
