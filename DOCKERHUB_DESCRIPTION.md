@@ -5,18 +5,24 @@ AI-enabled Mealie recipe manager with OpenAI integration for recipe generation a
 
 ## Full Description
 
-# Mealie AI v3.5.8
+# Mealie AI v3.5.13
 
 A fork of [Mealie](https://github.com/mealie-recipes/mealie) with enhanced AI capabilities for automatic recipe generation and image creation using OpenAI.
 
 ## Features
 
-- **v3.5.8**: Added "Fusion Feature" (Recipe Remix/Variants) - Create new recipes based on existing ones with AI modifications
+### Latest Updates
+- **v3.5.13**: Recipe Remix feature - Create variations of existing recipes with AI modifications, plus bug fixes for 404 redirects
+- **v3.5.8**: Enhanced fusion capabilities for recipe remixing
 - **v3.5.5**: Fixed "ChunkLoadError" issues by implementing auto-reload on frontend and improved cache control headers
-- **AI Recipe Generation**: Generate complete recipes from simple descriptions using GPT-35-turbo
+
+### Core AI Features
+- **Recipe Remix/Variants**: Transform existing recipes with AI - make them healthier, change cuisines, adjust servings, or create fusion variations
+- **AI Recipe Generation**: Generate complete recipes from simple descriptions using GPT-4o or GPT-3.5-turbo
 - **AI Image Generation**: Create professional food photography images using DALL-E 3
-- **Batch AI Operations**: Generate missing images for multiple recipes in one click
-- **Smart Auto-tagging**: Automatically tag recipes during generation based on content
+- **Batch Operations**: Generate missing images for multiple recipes in one click
+- **Smart Auto-tagging**: Automatically tag recipes based on their content
+- **Custom Image Prompts**: Provide specific instructions for AI-generated recipe images
 - **Parse Ingredients**: Automatically parse and structure recipe ingredients
 - **Enhanced Security**: Hardened image with patched system libraries and `urllib3` updates
 - **One-Click Setup**: Simple Docker deployment with OpenAI API key
@@ -84,6 +90,16 @@ After starting the container:
 4. Enter a recipe description
 5. Optionally check "Generate Image" for AI-generated food photography
 6. Click **Generate**
+
+### Recipe Remix (New in v3.5.13!)
+
+Transform existing recipes with AI:
+
+1. Open any recipe
+2. Click the **context menu** (three dots)
+3. Select **Remix Recipe**
+4. Choose a remix type (healthier, different cuisine, adjust servings, fusion, or custom)
+5. Click **Remix** to generate the variation
 
 ## Documentation & Source
 

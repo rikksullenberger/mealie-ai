@@ -12,12 +12,22 @@ This is a modified version of the excellent **Mealie** recipe management applica
 
 ### What's Different?
 
-This fork adds **AI-powered image generation** for recipes:
-- **v3.5.5**: Fixed "ChunkLoadError" issues by implementing auto-reload on frontend and improved cache control headers.
-- **Automatic Image Creation**: When creating a recipe using AI, you can now optionally generate a professional food photography image using OpenAI's DALL-E 3
-- **One-Click Generation**: Simply check the "Generate Image" box when creating a recipe from an AI prompt
+This fork adds **comprehensive AI-powered recipe management** features:
+
+#### Latest Updates
+- **v3.5.13**: Recipe Remix feature - Create variations of existing recipes with AI modifications, plus bug fixes for 404 redirects
+- **v3.5.8**: Enhanced fusion capabilities for recipe remixing
+- **v3.5.5**: Fixed "ChunkLoadError" issues by implementing auto-reload on frontend and improved cache control headers
+
+#### Core AI Features
+- **Recipe Remix/Variants**: Transform existing recipes with AI - make them healthier, change cuisines, adjust servings, or create fusion variations
+- **AI Recipe Generation**: Generate complete recipes from simple descriptions using GPT-4o or GPT-3.5-turbo
+- **AI Image Generation**: Create professional food photography images using DALL-E 3
+- **Batch Operations**: Generate missing images for multiple recipes in one click
+- **Smart Auto-tagging**: Automatically tag recipes based on their content
+- **Custom Image Prompts**: Provide specific instructions for AI-generated recipe images
 - **High-Quality Images**: Images are generated at 1024x1024 resolution with professional food photography style
-- **Optional Feature**: Image generation is disabled by default to avoid unexpected API costs
+- **Optional Features**: Image generation is disabled by default to avoid unexpected API costs
 
 ## Prerequisites
 
@@ -71,13 +81,39 @@ Required environment variables for AI features:
 
 ## Usage
 
-### Creating a Recipe with AI Image Generation
+### Creating a Recipe with AI
 
 1. Navigate to **Create** → **Generate with AI**
 2. Enter your recipe description (e.g., "Creamy Italian Carbonara")
-3. **Check the "Generate Image" checkbox** to create an AI-generated image
-4. Click **Generate**
-5. The recipe will be created with an AI-generated food photography image
+3. **Optional**: Check the "Generate Image" checkbox to create an AI-generated image
+4. **Optional**: Check the "Auto-Tag" checkbox to automatically tag the recipe
+5. Click **Generate**
+6. The recipe will be created with all requested AI enhancements
+
+### Recipe Remix (Create Variations)
+
+**New in v3.5.13!** Transform existing recipes with AI:
+
+1. Open any recipe
+2. Click the **context menu** (three dots) in the toolbar
+3. Select **Remix Recipe**
+4. Choose a remix type:
+   - **Healthier Version**: Reduce calories, fat, or sodium
+   - **Different Cuisine**: Transform to another cuisine style
+   - **Adjust Servings**: Scale ingredients up or down
+   - **Fusion Recipe**: Combine with another cuisine
+   - **Custom Instructions**: Provide specific modification instructions
+5. Click **Remix** to generate the new recipe variant
+6. The new recipe will be created with modifications and saved separately
+
+### Regenerating Recipe Images
+
+You can regenerate AI images for any recipe:
+
+1. Open a recipe in edit mode
+2. Click the **Regenerate Image** button near the image upload area
+3. **Optional**: Provide a custom image prompt for specific styling
+4. A new AI-generated image will be created and saved
 
 ### Cost Considerations
 
