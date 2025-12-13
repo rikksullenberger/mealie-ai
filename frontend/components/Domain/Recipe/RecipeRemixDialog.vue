@@ -48,11 +48,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useUserApi } from "~/composables/api";
 import { useRouter, useRoute } from "vue-router";
 import { alert } from "~/composables/use-toast";
-import { useI18n } from "vue-i18n";
 
 const props = defineProps<{
     slug: string
@@ -64,7 +63,9 @@ const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 const api = useUserApi();
-// const { t } = useI18n(); // Not using translation keys yet for new strings to keep it simple
+const $auth = useMealieAuth();
+
+const groupSlug = computed(() => (route.params.groupSlug as string) || $auth.user.value?.groupSlug || "");
 
 const presets = [
   { text: 'Vegan', value: 'Make this recipe Vegan' },
@@ -83,8 +84,13 @@ const remix = async () => {
         dialog.value = false
         alert.success("Recipe Remix Successful!");
         
-        const groupSlug = route.params.groupSlug || 'home'; // Fallback to 'home' or handle error
-        await router.push(`/g/${groupSlug}/r/${newSlug}`)
+        console.log('Redirecting to:', `/g/${groupSlug.value}/r/${newSlug}`)
+        await router.push(`/g/${groupSlug.value}/r/${newSlug}`)
+        
+        // Inform user that image is being generated
+        setTimeout(() => {
+            alert.info("AI image is being generated for this recipe. It will appear in a few seconds.");
+        }, 500);
     } catch (e: any) {
         console.error("Remix failed", e);
         const detail = e.response?.data?.detail || "Failed to remix recipe";
