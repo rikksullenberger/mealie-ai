@@ -116,6 +116,7 @@ const emit = defineEmits<{
   refresh: [];
   upload: [fileObject: File];
   delete: [];
+  "image-updated": [imageKey: string];
 }>();
 
 const i18n = useI18n();
@@ -150,8 +151,15 @@ async function deleteImage() {
 
 async function getImageFromURL() {
   loading.value = true;
-  if (await api.recipes.updateImagebyURL(props.slug, url.value)) {
-    emit(DELETE_EVENT);
+  try {
+    const response = await api.recipes.updateImagebyURL(props.slug, url.value);
+    if (response?.data?.image) {
+      alert.success(i18n.t("recipe.image-updated"));
+      emit("image-updated", response.data.image);
+    }
+  } catch (e) {
+    console.error(e);
+    alert.error(i18n.t("events.something-went-wrong"));
   }
   loading.value = false;
   menu.value = false;
@@ -162,8 +170,12 @@ async function regenerateAiImage() {
   menu.value = false;
   try {
     const response = await api.recipes.regenerateAiImage(props.slug, customPrompt.value);
-    alert.success(response.data);
-    emit(DELETE_EVENT); // This triggers a refresh of the image on the parent component
+    alert.success(response.data.message || response.data);
+    if (response.data.image) {
+      emit("image-updated", response.data.image);
+    } else {
+      emit("refresh");
+    }
   }
   catch (e: any) {
     if (e.response?.data?.detail) {

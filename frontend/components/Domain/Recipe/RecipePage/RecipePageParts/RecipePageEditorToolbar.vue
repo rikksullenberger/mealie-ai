@@ -6,6 +6,7 @@
       @upload="uploadImage"
       @refresh="imageKey++"
       @delete="deleteImage"
+      @image-updated="updateImageKey"
     />
     <RecipeSettingsMenu
       v-model="recipe.settings"
@@ -83,6 +84,11 @@ async function uploadImage(fileObject: File) {
 async function deleteImage() {
   // The image is already deleted on the backend, just need to update the UI
   recipe.value.image = "";
+  imageKey.value++;
+}
+
+function updateImageKey(key: string) {
+  recipe.value.image = key;
   imageKey.value++;
 }
 </script>

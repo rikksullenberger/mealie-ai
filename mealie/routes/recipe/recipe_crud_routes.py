@@ -637,7 +637,10 @@ class RecipeController(BaseRecipeController):
             ) from e
 
         recipe.image = cache.cache_key.new_key()
-        self.service.update_one(recipe.slug, recipe)
+        return SuccessResponse.respond(
+            message=self.t("recipe.image-updated"),
+            image=recipe.image
+        )
 
     @router.put("/{slug}/image", response_model=UpdateImageResponse, tags=["Recipe: Images and Assets"])
     def update_recipe_image(self, slug: str, image: bytes = File(...), extension: str = Form(...)):
@@ -669,7 +672,8 @@ class RecipeController(BaseRecipeController):
         try:
             updated_recipe = await self.service.generate_ai_recipe_image(slug, regenerate=False)
             return SuccessResponse.respond(
-                message=self.t("recipe.ai-image-generated", name=updated_recipe.name)
+                message=self.t("recipe.ai-image-generated", name=updated_recipe.name),
+                image=updated_recipe.image
             )
         except ValueError as e:
             raise HTTPException(
@@ -696,7 +700,8 @@ class RecipeController(BaseRecipeController):
         try:
             updated_recipe = await self.service.generate_ai_recipe_image(slug, regenerate=True, custom_text=custom_prompt)
             return SuccessResponse.respond(
-                message=self.t("recipe.ai-image-regenerated", name=updated_recipe.name)
+                message=self.t("recipe.ai-image-regenerated", name=updated_recipe.name),
+                image=updated_recipe.image
             )
         except ValueError as e:
             raise HTTPException(

@@ -540,10 +540,11 @@ class RecipeService(RecipeServiceBase):
             data_service.write_image(image_data, "webp")
             
             # Update the recipe image reference
-            updated_recipe = self.group_recipes.update_image(recipe.slug, "webp")
+            image_key = self.group_recipes.update_image(recipe.slug, "webp")
+            recipe.image = str(image_key)
             
             self.logger.info(f"Successfully generated AI image for recipe {recipe.slug}")
-            return updated_recipe
+            return recipe
             
         except Exception as e:
             self.logger.error(f"Failed to generate AI image for recipe {recipe.slug}: {e}")
