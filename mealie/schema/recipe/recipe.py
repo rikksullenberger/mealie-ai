@@ -115,6 +115,10 @@ class CreateRecipeAI(BaseModel):
     auto_tag: bool = False
 
 
+class RegenerateRecipeImageAI(BaseModel):
+    custom_prompt: str | None = None
+
+
 class CreateRecipe(MealieModel):
     name: str
 

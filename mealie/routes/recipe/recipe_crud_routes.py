@@ -679,8 +679,10 @@ class RecipeController(BaseRecipeController):
             self.handle_exceptions(e)
             return None
 
+from mealie.schema.recipe.recipe import RegenerateRecipeImageAI
+
     @router.post("/{slug}/image/ai-regenerate", tags=["Recipe: Images and Assets"])
-    async def regenerate_ai_recipe_image(self, slug: str):
+    async def regenerate_ai_recipe_image(self, slug: str, data: RegenerateRecipeImageAI | None = None):
         """Regenerate an AI image for a recipe, replacing the existing one"""
         if not (self.settings.OPENAI_ENABLED and self.settings.OPENAI_ENABLE_IMAGE_SERVICES):
             raise HTTPException(
@@ -688,8 +690,10 @@ class RecipeController(BaseRecipeController):
                 detail=ErrorResponse.respond("OpenAI image services are not enabled"),
             )
         
+        custom_prompt = data.custom_prompt if data else None
+
         try:
-            updated_recipe = await self.service.generate_ai_recipe_image(slug, regenerate=True)
+            updated_recipe = await self.service.generate_ai_recipe_image(slug, regenerate=True, custom_text=custom_prompt)
             return SuccessResponse.respond(
                 message=self.t("recipe.ai-image-regenerated", name=updated_recipe.name)
             )

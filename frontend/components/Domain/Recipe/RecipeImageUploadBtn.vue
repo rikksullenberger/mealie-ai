@@ -75,6 +75,15 @@
           </div>
 
           <div class="mt-2">
+            <v-textarea
+              v-model="customPrompt"
+              :label="$t('recipe.ai-image-instructions')"
+              rows="2"
+              variant="outlined"
+              hide-details="auto"
+              class="mb-2"
+              placeholder="e.g. Boneless ribs, dark background"
+            ></v-textarea>
             <v-btn
               block
               color="accent"
@@ -113,6 +122,7 @@ const i18n = useI18n();
 const api = useUserApi();
 
 const url = ref("");
+const customPrompt = ref("");
 const loading = ref(false);
 const menu = ref(false);
 const dialogDeleteImage = ref(false);
@@ -151,7 +161,7 @@ async function regenerateAiImage() {
   loading.value = true;
   menu.value = false;
   try {
-    const response = await api.recipes.regenerateAiImage(props.slug);
+    const response = await api.recipes.regenerateAiImage(props.slug, customPrompt.value);
     alert.success(response.data);
     emit(DELETE_EVENT); // This triggers a refresh of the image on the parent component
   }

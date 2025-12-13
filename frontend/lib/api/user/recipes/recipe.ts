@@ -154,8 +154,9 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
     return this.requests.post<string>(routes.recipesRecipeSlugAutoTag(slug), {});
   }
 
-  regenerateAiImage(slug: string) {
-    return this.requests.post<string>(routes.recipesRecipeSlugImageAiRegenerate(slug), {});
+  regenerateAiImage(slug: string, customPrompt?: string) {
+    const payload = customPrompt ? { custom_prompt: customPrompt } : {};
+    return this.requests.post<string>(routes.recipesRecipeSlugImageAiRegenerate(slug), payload);
   }
 
   generateMissingImages() {

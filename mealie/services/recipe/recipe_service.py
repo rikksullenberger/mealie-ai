@@ -476,13 +476,14 @@ class RecipeService(RecipeServiceBase):
         self.check_assets(new_data, recipe.slug)
         return new_data
 
-    async def generate_ai_recipe_image(self, slug_or_id: str | UUID, regenerate: bool = False) -> Recipe:
+    async def generate_ai_recipe_image(self, slug_or_id: str | UUID, regenerate: bool = False, custom_text: str | None = None) -> Recipe:
         """
         Generate or regenerate an AI image for a recipe using OpenAI.
         
         Args:
             slug_or_id: Recipe slug or ID
             regenerate: If True, regenerates even if image exists. If False, only generates if no image exists.
+            custom_text: Optional custom text to append to the image prompt (e.g., "Boneless ribs")
         
         Returns:
             Updated recipe with new AI-generated image
@@ -520,6 +521,9 @@ class RecipeService(RecipeServiceBase):
             ingredients = [ing.note for ing in recipe.recipe_ingredient[:5] if ing.note]
             if ingredients:
                 prompt_parts.append(f"Key ingredients: {', '.join(ingredients)}.")
+
+        if custom_text:
+            prompt_parts.append(f"Additional details: {custom_text}")
         
         prompt = " ".join(prompt_parts)
         
