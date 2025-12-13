@@ -39,6 +39,7 @@ from mealie.schema.recipe.recipe import (
     RecipeLastMade,
     RecipeSummary,
     RegenerateRecipeImageAI,
+    create_recipe_slug,
 )
 from mealie.schema.recipe.recipe_asset import RecipeAsset
 from mealie.schema.recipe.recipe_scraper import ScrapeRecipeTest
