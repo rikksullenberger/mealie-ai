@@ -37,6 +37,7 @@ from mealie.schema.recipe.recipe import (
     CreateRecipeByUrlBulk,
     RecipeLastMade,
     RecipeSummary,
+    RegenerateRecipeImageAI,
 )
 from mealie.schema.recipe.recipe_asset import RecipeAsset
 from mealie.schema.recipe.recipe_scraper import ScrapeRecipeTest
@@ -679,7 +680,7 @@ class RecipeController(BaseRecipeController):
             self.handle_exceptions(e)
             return None
 
-from mealie.schema.recipe.recipe import RegenerateRecipeImageAI
+
 
     @router.post("/{slug}/image/ai-regenerate", tags=["Recipe: Images and Assets"])
     async def regenerate_ai_recipe_image(self, slug: str, data: RegenerateRecipeImageAI | None = None):
