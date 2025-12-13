@@ -5,12 +5,13 @@ AI-enabled Mealie recipe manager with OpenAI integration for recipe generation a
 
 ## Full Description
 
-# Mealie AI v3.5.7
+# Mealie AI v3.5.8
 
 A fork of [Mealie](https://github.com/mealie-recipes/mealie) with enhanced AI capabilities for automatic recipe generation and image creation using OpenAI.
 
 ## Features
 
+- **v3.5.8**: Added "Fusion Feature" (Recipe Remix/Variants) - Create new recipes based on existing ones with AI modifications
 - **v3.5.5**: Fixed "ChunkLoadError" issues by implementing auto-reload on frontend and improved cache control headers
 - **AI Recipe Generation**: Generate complete recipes from simple descriptions using GPT-35-turbo
 - **AI Image Generation**: Create professional food photography images using DALL-E 3
