@@ -23,7 +23,21 @@
           <v-icon>
             {{ $globals.icons.github }}
           </v-icon>
+          <v-tooltip
+            activator="parent"
+            location="top"
+          >
+            View Source Code (AGPL-3.0)
+          </v-tooltip>
         </v-btn>
+        <a
+          href="https://github.com/rikksullenberger/mealie-ai"
+          target="_blank"
+          class="white--text text-decoration-none ml-2"
+        >
+          Source Code
+        </a>
+        •
         {{ new Date().getFullYear() }} — <strong> Mealie AI </strong>
       </v-col>
     </v-row>

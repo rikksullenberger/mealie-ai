@@ -1,5 +1,11 @@
 # Mealie AI - Docker Hub Deployment Guide
 
+> **Source Code**: This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+> The complete source code is available at: [https://github.com/rikksullenberger/mealie-ai](https://github.com/rikksullenberger/mealie-ai)
+>
+> **IMPORTANT**: If you modify this software and provide it as a network service (e.g., hosting for others to use),
+> you must make your modified source code available under the same AGPL-3.0 license.
+
 This guide walks you through deploying your AI-enabled Mealie application to a remote server using Docker Hub.
 
 ## Prerequisites

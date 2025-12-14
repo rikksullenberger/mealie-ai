@@ -222,5 +222,40 @@ If you find this fork useful, please consider:
 
 ## Disclaimer
 
-This is an unofficial fork and is not affiliated with or endorsed by the official Mealie project. Use at your own risk, especially regarding OpenAI API costs.
-# mealie-ai
+This is an unofficial fork and is not affiliated with or endorsed by the official Mealie project.
+
+### ⚠️ DISCLAIMER OF WARRANTY
+
+**THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. THE SOLE WARRANTY PROVIDED IS THAT THIS SOFTWARE MAY TAKE UP DRIVE SPACE ON YOUR SYSTEM.**
+
+**IN NO EVENT SHALL THE AUTHORS, COPYRIGHT HOLDERS, OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.**
+
+**YOU USE THIS SOFTWARE ENTIRELY AT YOUR OWN RISK.**
+
+### 💰 AI USAGE AND COST INDEMNITY
+
+**IMPORTANT**: This fork integrates with OpenAI's paid API services. By using the AI features in this software, you acknowledge and agree that:
+
+1. **YOU ARE SOLELY RESPONSIBLE** for all costs incurred through your use of OpenAI's API, including but not limited to:
+   - GPT model usage (recipe generation, remixing, auto-tagging)
+   - DALL-E image generation and regeneration
+   - Any other API calls made by this software
+
+2. **YOU INDEMNIFY AND HOLD HARMLESS** Rikk Sullenberger, contributors to this fork, and the original Mealie project from any and all costs, expenses, damages, or liabilities arising from your use of AI features, including but not limited to unexpected API charges, rate limit violations, or service interruptions.
+
+3. **NO COST GUARANTEES**: While this software attempts to provide cost estimates and warnings, these are informational only. Actual costs may vary and the maintainer makes no guarantees regarding API usage or costs.
+
+4. **YOUR RESPONSIBILITY**: You are responsible for:
+   - Managing your own OpenAI API key and account
+   - Monitoring your API usage and costs in the OpenAI dashboard
+   - Setting appropriate spending limits in your OpenAI account
+   - Understanding OpenAI's current pricing before using AI features
+
+5. **CONFIGURATION ERRORS**: The maintainer is not responsible for any costs incurred due to misconfiguration, software bugs, or unexpected behavior of the AI features.
+
+**BY USING THE AI FEATURES OF THIS SOFTWARE, YOU ACCEPT FULL FINANCIAL RESPONSIBILITY FOR ALL API COSTS INCURRED.**
+
+### 📋 General Use
+
+Use this software at your own risk. The maintainer provides this fork as-is for personal use and makes no guarantees about functionality, reliability, data integrity, or fitness for any particular purpose.
+

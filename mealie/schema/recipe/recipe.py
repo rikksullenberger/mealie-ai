@@ -1,3 +1,20 @@
+# Original work Copyright (C) Mealie Contributors
+# Modified work Copyright (C) 2024 Rikk Sullenberger
+#
+# This file is part of Mealie AI, a fork of Mealie (https://github.com/mealie-recipes/mealie)
+# Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)
+#
+# Modifications made in this fork:
+# - Added `include_image` field to CreateRecipeAI class (line 114)
+#   to support optional AI image generation during recipe creation
+# - Added `auto_tag` field to CreateRecipeAI class (line 115)
+#   to support automatic tagging of AI-generated recipes
+# - Added RegenerateRecipeImageAI class (line 118-119)
+#   for regenerating recipe images with custom prompts
+#
+# Source code: https://github.com/rikksullenberger/mealie-ai
+# Original source: https://github.com/mealie-recipes/mealie
+
 from __future__ import annotations
 
 import datetime

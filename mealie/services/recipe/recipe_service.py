@@ -1,3 +1,22 @@
+# Original work Copyright (C) Mealie Contributors
+# Modified work Copyright (C) 2024 Rikk Sullenberger
+#
+# This file is part of Mealie AI, a fork of Mealie (https://github.com/mealie-recipes/mealie)
+# Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)
+#
+# Modifications made in this fork:
+# - Added `generate_ai_recipe_image` method to RecipeService class (line 479-551)
+#   for generating/regenerating AI images with optional custom prompts
+# - Added `generate_recipe_with_image` method to OpenAIRecipeService class (line 691-699)
+#   to support returning both recipe and image data
+# - Added `auto_tag_recipe` method to OpenAIRecipeService class (line 701-796)
+#   for automatically tagging recipes using AI analysis
+# - Added `remix_recipe` method to OpenAIRecipeService class (line 798+)
+#   for creating recipe variations with AI modifications
+#
+# Source code: https://github.com/rikksullenberger/mealie-ai
+# Original source: https://github.com/mealie-recipes/mealie
+
 import json
 import os
 import shutil
