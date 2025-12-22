@@ -39,6 +39,9 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DEFAULT_TIMEOUT=100 \
     VENV_PATH="/opt/mealie"
 
+# Upgrade pip to fix CVE-2025-8869
+RUN pip install --no-cache-dir --upgrade pip
+
 # prepend venv to path
 ENV PATH="$VENV_PATH/bin:$PATH"
 
@@ -56,7 +59,7 @@ RUN apt-get update \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install uv && pip install --upgrade pip
+RUN pip install uv && pip install --no-cache-dir --upgrade pip
 
 WORKDIR /mealie
 
