@@ -1,24 +1,3 @@
-// Original work Copyright (C) Mealie Contributors
-// Modified work Copyright (C) 2024 Rikk Sullenberger
-//
-// This file is part of Mealie AI, a fork of Mealie (https://github.com/mealie-recipes/mealie)
-// Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)
-//
-// Modifications made in this fork:
-// - Added `autoTag` method (line 154-156)
-//   for automatic recipe tagging using AI
-// - Added `regenerateAiImage` method with custom prompt support (line 158-161)
-//   for regenerating AI images with optional custom instructions
-// - Added `remix` method (line 163-165)
-//   for creating recipe variations using AI
-// - Added `generateMissingImages` method (line 167-169)
-//   for batch AI image generation across recipes
-// - Modified `createOneFromAI` method to support `autoTag` parameter (line 203-205)
-//   for optional automatic tagging during AI recipe creation
-//
-// Source code: https://github.com/rikksullenberger/mealie-ai
-// Original source: https://github.com/mealie-recipes/mealie
-
 import { BaseCRUDAPI } from "../../base/base-clients";
 import { route } from "../../base";
 import { CommentsApi } from "./recipe-comments";
@@ -120,7 +99,7 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
   share: RecipeShareApi;
 
   constructor(requests: ApiRequestInstance) {
-    super(requests, routes.recipesBase, routes.recipesRecipeSlug);
+    super(requests);
 
     this.comments = new CommentsApi(requests);
     this.share = new RecipeShareApi(requests);
@@ -189,13 +168,12 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
     return this.requests.post<{ reportId: string }>("/api/recipes/images/generate-missing", {});
   }
 
-
   async testCreateOneUrl(url: string, useOpenAI = false) {
     return await this.requests.post<Recipe | null>(routes.recipesTestScrapeUrl, { url, useOpenAI });
   }
 
-  async createOneByHtmlOrJson(data: string, includeTags: boolean) {
-    return await this.requests.post<string>(routes.recipesCreateFromHtmlOrJson, { data, includeTags });
+  async createOneByHtmlOrJson(data: string, includeTags: boolean, url: string | null = null) {
+    return await this.requests.post<string>(routes.recipesCreateFromHtmlOrJson, { data, includeTags, url });
   }
 
   async createOneByUrl(url: string, includeTags: boolean) {

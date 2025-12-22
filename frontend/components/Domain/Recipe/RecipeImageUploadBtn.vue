@@ -73,30 +73,6 @@
               </template>
             </v-text-field>
           </div>
-
-          <div class="mt-2">
-            <v-textarea
-              v-model="customPrompt"
-              :label="$t('recipe.ai-image-instructions')"
-              rows="2"
-              variant="outlined"
-              hide-details="auto"
-              class="mb-2"
-              placeholder="e.g. Boneless ribs, dark background"
-            ></v-textarea>
-            <v-btn
-              block
-              color="accent"
-              variant="tonal"
-              :loading="loading"
-              @click="regenerateAiImage"
-            >
-              <v-icon start>
-                {{ $globals.icons.autoFix }}
-              </v-icon>
-              {{ $t("recipe.regenerate-image-ai") }}
-            </v-btn>
-          </div>
         </v-card-text>
       </v-card>
     </v-menu>
@@ -116,14 +92,12 @@ const emit = defineEmits<{
   refresh: [];
   upload: [fileObject: File];
   delete: [];
-  "image-updated": [imageKey: string];
 }>();
 
 const i18n = useI18n();
 const api = useUserApi();
 
 const url = ref("");
-const customPrompt = ref("");
 const loading = ref(false);
 const menu = ref(false);
 const dialogDeleteImage = ref(false);
@@ -151,44 +125,11 @@ async function deleteImage() {
 
 async function getImageFromURL() {
   loading.value = true;
-  try {
-    const response = await api.recipes.updateImagebyURL(props.slug, url.value);
-    if (response?.data?.image) {
-      alert.success(i18n.t("recipe.image-updated"));
-      emit("image-updated", response.data.image);
-    }
-  } catch (e) {
-    console.error(e);
-    alert.error(i18n.t("events.something-went-wrong"));
+  if (await api.recipes.updateImagebyURL(props.slug, url.value)) {
+    emit(DELETE_EVENT);
   }
   loading.value = false;
   menu.value = false;
-}
-
-async function regenerateAiImage() {
-  loading.value = true;
-  menu.value = false;
-  try {
-    const response = await api.recipes.regenerateAiImage(props.slug, customPrompt.value);
-    alert.success(response.data.message || response.data);
-    if (response.data.image) {
-      emit("image-updated", response.data.image);
-    } else {
-      emit("refresh");
-    }
-  }
-  catch (e: any) {
-    if (e.response?.data?.detail) {
-      alert.error(e.response.data.detail);
-    }
-    else {
-      alert.error(i18n.t("events.something-went-wrong"));
-    }
-    console.error("Failed to regenerate AI image", e);
-  }
-  finally {
-    loading.value = false;
-  }
 }
 
 const messages = computed(() =>

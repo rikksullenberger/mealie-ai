@@ -33,19 +33,10 @@ class MetaTag:
 class SPAStaticFiles(StaticFiles):
     async def get_response(self, path: str, scope):
         try:
-            response = await super().get_response(path, scope)
-            if path == "index.html" or path == ".":
-                response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-                response.headers["Pragma"] = "no-cache"
-                response.headers["Expires"] = "0"
-            return response
+            return await super().get_response(path, scope)
         except HTTPException as ex:
             if ex.status_code == 404:
-                response = await super().get_response("index.html", scope)
-                response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-                response.headers["Pragma"] = "no-cache"
-                response.headers["Expires"] = "0"
-                return response
+                return await super().get_response("index.html", scope)
             else:
                 raise ex
         except Exception as e:

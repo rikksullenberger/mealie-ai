@@ -390,7 +390,7 @@ class AppSettings(AppLoggingSettings):
     """The base URL for the OpenAI API. Leave this unset for most usecases"""
     OPENAI_API_KEY: MaskedNoneString = None
     """Your OpenAI API key. Required to enable OpenAI features"""
-    OPENAI_MODEL: str = "gpt-3.5-turbo"
+    OPENAI_MODEL: str = "gpt-4o"
     """Which OpenAI model to send requests to. Leave this unset for most usecases"""
     OPENAI_CUSTOM_HEADERS: dict[str, str] = {}
     """Custom HTTP headers to send with each OpenAI request"""
@@ -420,11 +420,6 @@ class AppSettings(AppLoggingSettings):
             description = "OPENAI_API_KEY is not set"
         elif not self.OPENAI_MODEL:
             description = "OPENAI_MODEL is not set"
-        else:
-            # Set environment variables if API key and model are present
-            os.environ["OPENAI_API_KEY"] = self.OPENAI_API_KEY
-            os.environ["OPENAI_MODEL"] = self.OPENAI_MODEL
-            os.environ["OPENAI_REQUEST_TIMEOUT"] = str(self.OPENAI_REQUEST_TIMEOUT) # Set the timeout from the class attribute
 
         return FeatureDetails(
             enabled=bool(self.OPENAI_API_KEY and self.OPENAI_MODEL),
@@ -470,8 +465,6 @@ def app_settings_constructor(data_dir: Path, production: bool, env_file: Path, e
     secret_settings = {
         "SECRET": determine_secrets(data_dir, ".secret", production),
         "SESSION_SECRET": determine_secrets(data_dir, ".session_secret", production),
-        "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY"),
-        "OPENAI_MODEL": os.environ.get("OPENAI_MODEL", "gpt-3.5-turbo"),
     }
     app_settings = AppSettings(
         _env_file=env_file,  # type: ignore

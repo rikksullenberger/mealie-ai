@@ -12,7 +12,6 @@ const routes = {
   cleanImages: `${prefix}/admin/maintenance/clean/images`,
   cleanRecipeFolders: `${prefix}/admin/maintenance/clean/recipe-folders`,
   cleanLogFile: `${prefix}/admin/maintenance/clean/logs`,
-  autoTagAll: `${prefix}/admin/maintenance/auto-tag-all`,
 };
 
 export class AdminMaintenanceApi extends BaseAPI {
@@ -34,10 +33,6 @@ export class AdminMaintenanceApi extends BaseAPI {
 
   async cleanRecipeFolders() {
     return await this.requests.post<SuccessResponse>(routes.cleanRecipeFolders, {});
-  }
-
-  async autoTagAll() {
-    return await this.requests.post<SuccessResponse>(routes.autoTagAll, {});
   }
 
   async cleanLogFile() {

@@ -17,28 +17,14 @@
         <v-btn
           color="white"
           icon
-          href="https://github.com/rikksullenberger/mealie-ai"
+          href="https://github.com/mealie-recipes/mealie"
           target="_blank"
         >
           <v-icon>
             {{ $globals.icons.github }}
           </v-icon>
-          <v-tooltip
-            activator="parent"
-            location="top"
-          >
-            View Source Code (AGPL-3.0)
-          </v-tooltip>
         </v-btn>
-        <a
-          href="https://github.com/rikksullenberger/mealie-ai"
-          target="_blank"
-          class="white--text text-decoration-none ml-2"
-        >
-          Source Code
-        </a>
-        •
-        {{ new Date().getFullYear() }} — <strong> Mealie AI </strong>
+        {{ new Date().getFullYear() }} — <strong> Mealie </strong>
       </v-col>
     </v-row>
   </v-footer>

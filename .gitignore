@@ -20,6 +20,10 @@ dev/data/backups/*
 dev/data/debug/*
 dev/data/img/*
 dev/data/migration/*
+<<<<<<< HEAD
+=======
+dev/data/templates/*
+>>>>>>> v3.8.0
 dev/data/users/*
 dev/data/groups/*
 
@@ -169,6 +173,7 @@ dev/code-generation/openapi.json
 .task/*
 .dev.env
 frontend/eslint.config.deprecated.js
+<<<<<<< HEAD
 
 # Secrets
 .env
@@ -189,3 +194,5 @@ deploy-to-remote.sh
 debug_auto_tag.py
 test_openai_connection.py
 check-build.sh
+=======
+>>>>>>> v3.8.0

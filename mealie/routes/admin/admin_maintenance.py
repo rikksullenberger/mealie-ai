@@ -2,7 +2,7 @@ import shutil
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException
 
 from mealie.pkgs.stats import fs_stats
 from mealie.routes._base import BaseAdminController, controller
@@ -11,21 +11,6 @@ from mealie.schema.admin.maintenance import MaintenanceStorageDetails
 from mealie.schema.response import ErrorResponse, SuccessResponse
 
 router = APIRouter(prefix="/maintenance")
-
-async def run_auto_tag_job(repos, user, household, translator, logger):
-    from mealie.services.recipe.recipe_service import OpenAIRecipeService
-    service = OpenAIRecipeService(repos, user, household, translator)
-    recipes = repos.recipes.get_all()
-    logger.info(f"Starting auto-tagging for {len(recipes)} recipes")
-    
-    for recipe in recipes:
-        try:
-            await service.auto_tag_recipe(recipe.slug)
-        except Exception as e:
-            logger.error(f"Failed to auto-tag {recipe.slug}: {e}")
-    
-    logger.info("Auto-tagging job completed")
-
 
 
 def clean_images(root_dir: Path, dry_run: bool) -> int:
@@ -134,18 +119,3 @@ class AdminMaintenanceController(BaseAdminController):
             return SuccessResponse.respond(f"{cleaned_dirs} Recipe folders removed")
         except Exception as e:
             raise HTTPException(status_code=500, detail=ErrorResponse.respond("Failed to clean directories")) from e
-
-    @router.post("/auto-tag-all", response_model=SuccessResponse)
-    def auto_tag_all_recipes(self, background_tasks: BackgroundTasks):
-        """
-        Triggers a background job to auto-tag all recipes using OpenAI.
-        """
-        background_tasks.add_task(
-            run_auto_tag_job, 
-            self.repos, 
-            self.user, 
-            self.household, 
-            self.translator,
-            self.logger
-        )
-        return SuccessResponse.respond("started background auto-tagging job")

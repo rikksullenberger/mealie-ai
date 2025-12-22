@@ -13,19 +13,6 @@ Alternatively, if you have another service you'd like to use in-place of OpenAI,
 If you wish to disable image recognition features (to save costs, or because your custom model doesn't support them) you can set `OPENAI_ENABLE_IMAGE_SERVICES` to `False`. For more information on what configuration options are available, check out the [backend configuration](./backend-config.md#openai).
 
 ## OpenAI Features
-
-Mealie AI includes powerful new features powered by OpenAI:
-
-### 1. AI Recipe Generation
-Generate complete recipes from just a name or description.
-- **How to use**: Go to **Recipe > New Recipe**, select **Generate with AI**, enter a name (e.g., "Spicy Thai Basil Chicken"), and watch Mealie create the full recipe with ingredients and steps.
-
-### 2. AI Image Generation
-Automatically generate missing images for your recipes.
-- **Single Recipe**: In the recipe editor, click the "Generate Image" button.
-- **Batch Generation**: Go to **Maintenance > AI Tools** to scan your library for recipes without images and generate them in bulk.
-
-### 3. Smart Import & Parsing
-- **URL Import**: If standard scraping fails, OpenAI attempts to parse the page content.
-- **Image Import**: Upload a photo of a cookbook page or handwritten card, and OpenAI will transcribe it.
-- **Ingredient Parsing**: Use the "OpenAI Parser" to intelligently interpret complex ingredient strings.
+- The OpenAI Ingredient Parser can be used as an alternative to the NLP and Brute Force parsers. Simply choose the OpenAI parser while parsing ingredients (:octicons-tag-24: v1.7.0)
+- When importing a recipe via URL, if the default recipe scraper is unable to read the recipe data from a webpage, the webpage contents will be parsed by OpenAI (:octicons-tag-24: v1.9.0)
+- You can import an image of a written recipe, which is sent to OpenAI and imported into Mealie. The recipe can be hand-written or typed, as long as the text is in the picture. You can also optionally have OpenAI translate the recipe into your own language (:octicons-tag-24: v1.12.0)

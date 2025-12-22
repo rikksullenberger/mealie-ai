@@ -1,7 +1,7 @@
 ###############################################
 # Frontend Build
 ###############################################
-FROM node:24 \
+FROM node:24@sha256:20988bcdc6dc76690023eb2505dd273bdeefddcd0bde4bfd1efe4ebf8707f747 \
     AS frontend-builder
 
 WORKDIR /frontend
@@ -19,15 +19,9 @@ RUN yarn install \
 RUN yarn generate
 
 ###############################################
-# Gosu Builder
-###############################################
-FROM golang:alpine AS gosu-builder
-RUN go install github.com/tianon/gosu@latest
-
-###############################################
 # Base Image - Python
 ###############################################
-FROM python:3.12-slim \
+FROM python:3.12-slim@sha256:2267adc248a477c1f1a852a07a5a224d42abe54c28aafa572efa157dfb001bba \
     AS python-base
 
 ENV MEALIE_HOME="/app"
@@ -38,9 +32,6 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
     VENV_PATH="/opt/mealie"
-
-# Upgrade pip to fix CVE-2025-8869
-RUN pip install --no-cache-dir --upgrade pip
 
 # prepend venv to path
 ENV PATH="$VENV_PATH/bin:$PATH"
@@ -59,7 +50,7 @@ RUN apt-get update \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install uv && pip install --no-cache-dir --upgrade pip
+RUN pip install uv
 
 WORKDIR /mealie
 
@@ -129,13 +120,11 @@ ENV GIT_COMMIT_HASH=$COMMIT
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
+    gosu \
     iproute2 \
     libldap-common \
     libldap2 \
     && rm -rf /var/lib/apt/lists/*
-
-COPY --from=gosu-builder /go/bin/gosu /usr/sbin/gosu
-RUN chmod +x /usr/sbin/gosu
 
 # create directory used for Docker Secrets
 RUN mkdir -p /run/secrets

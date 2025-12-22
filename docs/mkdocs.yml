@@ -70,7 +70,6 @@ nav:
 
       - Installation:
           - Installation Checklist: "documentation/getting-started/installation/installation-checklist.md"
-          - Docker CLI: "documentation/getting-started/installation/docker-cli.md"
           - SQLite (Recommended): "documentation/getting-started/installation/sqlite.md"
           - PostgreSQL: "documentation/getting-started/installation/postgres.md"
           - Backend Configuration: "documentation/getting-started/installation/backend-config.md"

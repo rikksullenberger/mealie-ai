@@ -25,7 +25,7 @@
         style="cursor: pointer"
         @click="$router.push(routerLink)"
       >
-        Mealie AI
+        Mealie
       </v-toolbar-title>
     </div>
     <RecipeDialogSearch ref="domSearchDialog" />
@@ -149,6 +149,6 @@ export default defineNuxtComponent({
 
 <style scoped>
 .v-toolbar {
-  z-index: 1010 !important;
+  z-index: 2010 !important;
 }
 </style>

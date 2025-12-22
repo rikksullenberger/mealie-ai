@@ -1,27 +1,3 @@
-# Original work Copyright (C) Mealie Contributors
-# Modified work Copyright (C) 2024 Rikk Sullenberger
-#
-# This file is part of Mealie AI, a fork of Mealie (https://github.com/mealie-recipes/mealie)
-# Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0)
-#
-# Modifications made in this fork:
-# - Added `create_recipe_from_ai` route handler (line 292-337)
-#   for AI-powered recipe generation with optional image generation and auto-tagging
-# - Added `generate_missing_images` route handler (line 339-365)
-#   for batch AI image generation across multiple recipes
-# - Added `generate_ai_recipe_image` route handler (line 690-713)
-#   for generating AI images for individual recipes
-# - Added `regenerate_ai_recipe_image` route handler (line 717-742)
-#   for regenerating AI images with custom prompts
-# - Added `remix_recipe` route handler (line 744-788)
-#   for creating recipe variations using AI
-# - Added `auto_tag_recipe` route handler (line 790+)
-#   for automatic recipe tagging using AI
-# - Modified various create routes to support auto-tagging background tasks
-#
-# Source code: https://github.com/rikksullenberger/mealie-ai
-# Original source: https://github.com/mealie-recipes/mealie
-
 from collections import defaultdict
 from shutil import copyfileobj
 from uuid import UUID
@@ -213,7 +189,7 @@ class RecipeController(BaseRecipeController):
     async def _create_recipe_from_web(self, req: ScrapeRecipe | ScrapeRecipeData, bg_tasks: BackgroundTasks | None = None):
         if isinstance(req, ScrapeRecipeData):
             html = req.data
-            url = ""
+            url = req.url or ""
         else:
             html = None
             url = req.url
@@ -276,7 +252,7 @@ class RecipeController(BaseRecipeController):
             recipe = self.service.create_from_zip(archive, temp_path)
             
             bg_tasks.add_task(self._auto_tag_background, recipe.slug)
-
+            
             self.publish_event(
                 event_type=EventTypes.recipe_created,
                 document_data=EventRecipeData(operation=EventOperation.create, recipe_slug=recipe.slug),
@@ -387,7 +363,6 @@ class RecipeController(BaseRecipeController):
         self.logger.info(f"Started batch AI image generation for group {self.group.id}, report ID: {report_id}")
 
         return {"reportId": report_id}
-
 
     # ==================================================================================================================
     # CRUD Operations
@@ -735,8 +710,6 @@ class RecipeController(BaseRecipeController):
         except Exception as e:
             self.handle_exceptions(e)
             return None
-
-
 
     @router.post("/{slug}/image/ai-regenerate", tags=["Recipe: Images and Assets"])
     async def regenerate_ai_recipe_image(self, slug: str, data: RegenerateRecipeImageAI | None = None):

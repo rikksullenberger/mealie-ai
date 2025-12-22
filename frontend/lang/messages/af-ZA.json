@@ -342,6 +342,9 @@
     "breakfast": "Ontbyt",
     "lunch": "Middagete",
     "dinner": "Aandete",
+    "snack": "Snack",
+    "drink": "Drink",
+    "dessert": "Dessert",
     "type-any": "Enige",
     "day-any": "Enige",
     "editor": "Editor",
@@ -442,6 +445,7 @@
     "upload-a-recipe": "Laai 'n resep op",
     "upload-individual-zip-file": "Laai 'n .zip-lêer op wat vanaf 'n ander Mealie-instansie uitgevoer is.",
     "url-form-hint": "Kopieer en plak 'n skakel vanaf jou gunstelingresepwebwerf",
+    "copy-and-paste-the-source-url-of-your-data-optional": "Copy and paste the source URL of your data (optional)",
     "view-scraped-data": "Bekyk opgespoorde data",
     "trim-whitespace-description": "Knip voorste en agterste witspasie sowel as leë reëls",
     "trim-prefix-description": "Knip die eerste karakter van elke reël af",
@@ -633,6 +637,8 @@
     "scrape-recipe-suggest-bulk-importer": "Try out the bulk importer",
     "scrape-recipe-have-raw-html-or-json-data": "Have raw HTML or JSON data?",
     "scrape-recipe-you-can-import-from-raw-data-directly": "You can import from raw data directly",
+    "scrape-recipe-website-being-blocked": "Website being blocked?",
+    "scrape-recipe-try-importing-raw-html-instead": "Try importing the raw HTML instead.",
     "import-original-keywords-as-tags": "Voer oorspronklike sleutelwoorde as merkers in",
     "stay-in-edit-mode": "Bly in redigeer modus",
     "parse-recipe-ingredients-after-import": "Parse recipe ingredients after import",
@@ -1422,5 +1428,13 @@
       "is-like": "is like",
       "is-not-like": "is not like"
     }
+  },
+  "validators": {
+    "required": "This Field is Required",
+    "invalid-email": "Email Must Be Valid",
+    "invalid-url": "Must Be A Valid URL",
+    "no-whitespace": "No Whitespace Allowed",
+    "min-length": "Must Be At Least {min} Characters",
+    "max-length": "Must Be At Most {max} Characters"
   }
 }

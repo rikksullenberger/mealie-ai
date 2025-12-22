@@ -196,6 +196,7 @@ class OpenAIService(BaseService):
                 response_format="b64_json",
             )
 
+        
             if not response.data:
                 return None
 

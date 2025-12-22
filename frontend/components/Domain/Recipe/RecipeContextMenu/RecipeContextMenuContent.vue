@@ -45,31 +45,15 @@
     @confirm="addRecipeToPlan()"
   >
     <v-card-text>
-      <v-menu
-        v-model="pickerMenu"
-        :close-on-content-click="false"
-        transition="scale-transition"
-        offset-y
-        max-width="290px"
-        min-width="auto"
-      >
-        <template #activator="{ props: activatorProps }">
-          <v-text-field
-            :model-value="$d(newMealdate)"
-            :label="$t('general.date')"
-            :prepend-icon="$globals.icons.calendar"
-            v-bind="activatorProps"
-            readonly
-          />
-        </template>
-        <v-date-picker
-          v-model="newMealdate"
-          hide-header
-          :first-day-of-week="firstDayOfWeek"
-          :local="$i18n.locale"
-          @update:model-value="pickerMenu = false"
-        />
-      </v-menu>
+      <v-date-picker
+        v-model="newMealdate"
+        class="mx-auto mb-3"
+        hide-header
+        show-adjacent-months
+        color="primary"
+        :first-day-of-week="firstDayOfWeek"
+        :local="$i18n.locale"
+      />
       <v-select
         v-model="newMealType"
         :return-object="false"
@@ -207,7 +191,6 @@ const loading = ref(false);
 const menuItems = ref<ContextMenuItem[]>([]);
 const newMealdate = ref(new Date());
 const newMealType = ref<PlanEntryType>("dinner");
-const pickerMenu = ref(false);
 
 const newMealdateString = computed(() => {
   // Format the date to YYYY-MM-DD in the same timezone as newMealdate
@@ -260,13 +243,6 @@ const defaultItems: { [key: string]: ContextMenuItem } = {
     icon: $globals.icons.duplicate,
     color: undefined,
     event: "duplicate",
-    isPublic: false,
-  },
-  autoTag: {
-    title: "Auto-Tag",
-    icon: $globals.icons.autoFix,
-    color: undefined,
-    event: "autoTag",
     isPublic: false,
   },
   mealplanner: {
@@ -450,16 +426,6 @@ const eventHandlers: { [key: string]: () => void | Promise<any> } = {
   },
   share: () => {
     shareDialog.value = true;
-  },
-  autoTag: async () => {
-    loading.value = true;
-    const { error } = await api.recipes.autoTag(props.slug);
-    if (!error) {
-      alert.success(i18n.t("events.message-sent"));
-      await refreshRecipe();
-    } else {
-      alert.error(i18n.t("events.something-went-wrong"));
-    }
   },
 };
 
