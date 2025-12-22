@@ -12,7 +12,7 @@ A fork of [Mealie](https://github.com/mealie-recipes/mealie) with enhanced AI ca
 ## Features
 
 ### Latest Updates
-- **v3.5.15**: Security updates (CVE-2025-68146, CVE-2025-8869 analysis), Python 3.13 support, and dependency refreshes
+- **v3.5.15**: Added **ARM64 Support** (e.g., Raspberry Pi), Security updates (CVE-2025-68146, CVE-2025-8869 analysis), Python 3.13 support, and dependency refreshes
 - **v3.5.13**: Recipe Remix feature - Create variations of existing recipes with AI modifications, plus bug fixes for 404 redirects
 - **v3.5.8**: Enhanced fusion capabilities for recipe remixing
 - **v3.5.5**: Fixed "ChunkLoadError" issues by implementing auto-reload on frontend and improved cache control headers
