@@ -34,3 +34,20 @@ venv
 crowdin.yml
 .env
 mealie-ai-website/
+
+# Non-operational / Test files
+tests/
+dev/
+docs/
+*.md
+LICENSE
+deploy-to-remote.py
+deploy-to-remote.sh
+debug_auto_tag.py
+test_openai_connection.py
+check-build.sh
+docker-compose.deploy.yml
+Taskfile.yml
+cliff.toml
+netlify.toml
+renovate.json

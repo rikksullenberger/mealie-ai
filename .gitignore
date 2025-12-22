@@ -182,3 +182,10 @@ credentials*
 debug_recipe.py
 docker/debug_logs.txt
 mealie-ai.tar
+
+# Local Deployment & Helper Scripts
+deploy-to-remote.py
+deploy-to-remote.sh
+debug_auto_tag.py
+test_openai_connection.py
+check-build.sh
