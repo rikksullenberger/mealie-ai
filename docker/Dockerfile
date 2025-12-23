@@ -58,7 +58,8 @@ RUN apt-get update \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install uv
+RUN pip install --upgrade pip && pip install uv
+
 
 WORKDIR /mealie
 
@@ -95,6 +96,7 @@ COPY --from=backend-builder /mealie/dist /
 # Install packages required to build the venv, in parallel to building the wheel
 FROM python-base AS venv-builder-base
 RUN apt-get update \
+    && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
     build-essential \
     libpq-dev \
@@ -127,6 +129,7 @@ ARG COMMIT
 ENV GIT_COMMIT_HASH=$COMMIT
 
 RUN apt-get update \
+    && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
     dos2unix \
     iproute2 \

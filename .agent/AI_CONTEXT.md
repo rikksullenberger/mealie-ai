@@ -30,8 +30,8 @@
     -   *Solution*: Updated dialog to say "Generate AI image" and "Describe the image to generate".
 
 ### Versioning
-- Current Version: **3.8.16**
-- Tags: `v3.8.16`, `latest`
+- Current Version: **3.8.17**
+- Tags: `v3.8.17`, `latest`
 - Platforms: `linux/amd64`, `linux/arm64`
 
 ## Current Status (2025-12-23)
