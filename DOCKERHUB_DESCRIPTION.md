@@ -5,17 +5,20 @@ AI-enabled Mealie recipe manager with OpenAI integration for recipe generation a
 
 ## Full Description
 
-# Mealie AI v3.5.15
+# Mealie AI v3.8
 
 A fork of [Mealie](https://github.com/mealie-recipes/mealie) with enhanced AI capabilities for automatic recipe generation and image creation using OpenAI.
 
 ## Features
 
+#### ⚠️ Deprecation Notice (Versions 3.5.x)
+All versions in the 3.5.x series are now **deprecated**. Users are strongly encouraged to upgrade to the latest 3.8.x release.
+- **Reason**: We have updated the Mealie core to **v3.8** to match the latest official Mealie release.
+- **Benefits**: Full feature parity with official Mealie, latest security patches, and improved stability.
+
 ### Latest Updates
+- **v3.8.x**: **Updated Core**: Aligned with Mealie v3.8. **Security Fixes**: Multiple CVEs patched. **Multi-Arch**: Native ARM64 (Raspberry Pi) support.
 - **v3.5.15**: Added **ARM64 Support** (e.g., Raspberry Pi), Security updates (CVE-2025-68146, **Fixed CVE-2025-8869**), Python 3.13 support, and dependency refreshes
-- **v3.5.13**: Recipe Remix feature - Create variations of existing recipes with AI modifications, plus bug fixes for 404 redirects
-- **v3.5.8**: Enhanced fusion capabilities for recipe remixing
-- **v3.5.5**: Fixed "ChunkLoadError" issues by implementing auto-reload on frontend and improved cache control headers
 
 ### Core AI Features
 - **Recipe Remix/Variants**: Transform existing recipes with AI - make them healthier, change cuisines, adjust servings, or create fusion variations
