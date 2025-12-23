@@ -14,6 +14,17 @@ This is a modified version of the excellent **Mealie** recipe management applica
 
 This fork adds **comprehensive AI-powered recipe management** features:
 
+#### ⚠️ Deprecation Notice (Versions 3.5.x)
+All versions in the 3.5.x series are now **deprecated**. Users are strongly encouraged to upgrade to the latest 3.8.x release.
+- **Reason**: We have updated the Mealie core to **v3.8** to match the latest official Mealie release.
+- **Benefits**: Full feature parity with official Mealie, latest security patches, and improved stability.
+
+#### Docker Hub & ARM64 Support
+Official Docker images are available on Docker Hub:
+👉 [rikksullenberger/mealie-ai](https://hub.docker.com/r/rikksullenberger/mealie-ai)
+
+**Now with ARM64 support!** This release includes multi-arch images, supporting **Raspberry Pi** and other ARM64 devices alongside standard AMD64 systems.
+
 #### Latest Updates
 - **v3.8.18**: **Security Fixes**: Fixed CVE-2025-61724 & 58183 (Go Runtime), CVE-2025-9231 & 9232 (OpenSSL), and CVE-2025-58050 (PCRE2) via system and runtime updates.
 - **v3.8.17**: **Security Fixes**: Fixed 10+ CVEs including `filelock` (CVE-2025-68146), `pip` (CVE-2025-8869), OpenSSL (CVE-2025-9230), and Go Runtime (CVE-2025-61729 etc.).
@@ -65,7 +76,7 @@ This fork adds **comprehensive AI-powered recipe management** features:
 
 4. **Access the application:**
    
-   Open your browser to `http://localhost:9091`
+   Open your browser to `http://localhost:9099`
 
 ### Environment Variables
 
