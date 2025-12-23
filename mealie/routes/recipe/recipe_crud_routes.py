@@ -354,13 +354,35 @@ class RecipeController(BaseRecipeController):
                 detail=ErrorResponse.respond("OpenAI image services are not enabled"),
             )
 
-        from mealie.services.recipe.recipe_batch_image_service import RecipeBatchImageService
+        from mealie.services.recipe.recipe_batch_service import RecipeBatchService
 
-        batch_service = RecipeBatchImageService(self.service, self.repos, self.group, self.household, self.translator)
+        batch_service = RecipeBatchService(self.service, self.repos, self.group, self.household, self.translator)
         report_id = batch_service.get_report_id()
         bg_tasks.add_task(batch_service.generate_missing_images)
 
         self.logger.info(f"Started batch AI image generation for group {self.group.id}, report ID: {report_id}")
+
+        return {"reportId": report_id}
+
+    @router.post("/actions/auto-tag-all", status_code=202)
+    def auto_tag_all_recipes(self, bg_tasks: BackgroundTasks):
+        """
+        Auto-tag all recipes in the household using OpenAI.
+        This operation runs asynchronously in the background and returns a report ID for tracking progress.
+        """
+        if not self.settings.OPENAI_ENABLED:
+            raise HTTPException(
+                status_code=400,
+                detail=ErrorResponse.respond("OpenAI is not enabled"),
+            )
+
+        from mealie.services.recipe.recipe_batch_service import RecipeBatchService
+
+        batch_service = RecipeBatchService(self.service, self.repos, self.group, self.household, self.translator)
+        report_id = batch_service.get_report_id()
+        bg_tasks.add_task(batch_service.auto_tag_all)
+
+        self.logger.info(f"Started batch auto-tagging for group {self.group.id}, report ID: {report_id}")
 
         return {"reportId": report_id}
 

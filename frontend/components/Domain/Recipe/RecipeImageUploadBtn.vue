@@ -33,6 +33,14 @@
               @uploaded="uploadImage"
             />
             <BaseButton
+              v-if="$appInfo.enableOpenaiImageServices"
+              class="ml-2"
+              :icon="$globals.icons.autoFix"
+              color="accent"
+              :title="$t('new-recipe.generate-with-ai')"
+              @click="showGenerateDialog = true"
+            />
+            <BaseButton
               class="ml-2"
               delete
               @click="dialogDeleteImage = true"
@@ -49,6 +57,11 @@
                 {{ $t("recipe.delete-image-confirmation") }}
               </v-card-text>
             </BaseDialog>
+            <RecipeGenerateImageDialog
+              v-model="showGenerateDialog"
+              :slug="slug"
+              @image-updated="handleImageUpdated"
+            />
           </div>
         </v-card-title>
         <v-card-text class="mt-n5">
@@ -81,7 +94,10 @@
 
 <script setup lang="ts">
 import { alert } from "~/composables/use-toast";
+import RecipeGenerateImageDialog from "~/components/Domain/Recipe/RecipeGenerateImageDialog.vue";
 import { useUserApi } from "~/composables/api";
+
+const recipe = defineModel<NoUndefinedField<Recipe>>({ required: true });
 
 const UPLOAD_EVENT = "upload";
 const DELETE_EVENT = "delete";
@@ -135,6 +151,12 @@ async function getImageFromURL() {
 const messages = computed(() =>
   props.slug ? [""] : [i18n.t("recipe.save-recipe-before-use")],
 );
+
+const showGenerateDialog = ref(false);
+
+function handleImageUpdated(key: string) {
+  emit("image-updated", key);
+}
 </script>
 
 <style lang="scss" scoped></style>

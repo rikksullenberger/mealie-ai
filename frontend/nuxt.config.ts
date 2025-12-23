@@ -123,6 +123,9 @@ export default defineNuxtConfig({
 
   nitro: {
     baseURL: process.env.SUB_PATH || "",
+    output: {
+      publicDir: "dist",
+    },
   },
 
   // eslint rules

@@ -215,6 +215,15 @@ export default defineNuxtComponent({
         hide: !showImageImport.value,
       },
       {
+        insertDivider: false,
+        icon: $globals.icons.autoFix,
+        title: i18n.t("new-recipe.generate-with-ai"),
+        subtitle: i18n.t("new-recipe.generate-with-ai-description"),
+        to: `/g/${groupSlug.value}/r/create/ai`,
+        restricted: true,
+        hide: !$appInfo.enableOpenai,
+      },
+      {
         insertDivider: true,
         icon: $globals.icons.edit,
         title: i18n.t("general.create"),

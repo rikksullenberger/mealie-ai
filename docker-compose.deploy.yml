@@ -1,7 +1,7 @@
 services:
   mealie-ai:
     container_name: mealie-ai
-    image: rikksullenber/mealie-ai:latest
+    image: rikksullenber/mealie-ai:v3.6.6
     restart: always
     volumes:
       - mealie-ai-data:/app/data/

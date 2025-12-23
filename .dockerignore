@@ -32,7 +32,6 @@ venv
 /mealie/frontend/
 
 crowdin.yml
-<<<<<<< HEAD
 .env
 mealie-ai-website/
 
@@ -52,5 +51,3 @@ Taskfile.yml
 cliff.toml
 netlify.toml
 renovate.json
-=======
->>>>>>> v3.8.0

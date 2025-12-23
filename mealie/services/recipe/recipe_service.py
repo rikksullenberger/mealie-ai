@@ -573,7 +573,7 @@ class RecipeService(RecipeServiceBase):
         return t_service.render(recipe, template)
 
 
-class OpenAIRecipeService(RecipeServiceBase):
+class OpenAIRecipeService(RecipeService):
     def _convert_recipe(self, openai_recipe: OpenAIRecipe) -> Recipe:
         return Recipe(
             user_id=self.user.id,

@@ -11,6 +11,7 @@ import {
   mdiArrowLeftBoldOutline,
   mdiArrowRightBold,
   mdiArrowRightBoldOutline,
+  mdiAutoFix,
   mdiBackupRestore,
   mdiBeakerOutline,
   mdiBellAlert,
@@ -302,6 +303,7 @@ export const icons = {
   minus: mdiMinus,
   pending: mdiTimerSand,
   refresh: mdiRefresh,
+  autoFix: mdiAutoFix,
 
   // Organization
   tags: mdiTagMultipleOutline,

@@ -441,6 +441,10 @@
     "paste-in-your-recipe-data-each-line-will-be-treated-as-an-item-in-a-list": "Paste in your recipe data. Each line will be treated as an item in a list",
     "recipe-markup-specification": "Recipe Markup Specification",
     "recipe-url": "Recipe URL",
+    "generate-with-ai": "Generate with AI",
+    "generate": "Generate",
+    "describe-recipe-hint": "e.g. A spicy taco with flavourful beef, cheese, and lettuce.",
+    "generate-with-ai-description": "Describe the recipe you want to create and let AI generate it for you.",
     "recipe-html-or-json": "Recipe HTML or JSON",
     "upload-a-recipe": "Upload a Recipe",
     "upload-individual-zip-file": "Upload an individual .zip file exported from another Mealie instance.",
@@ -704,7 +708,10 @@
     "cover-image": "Cover image",
     "include-linked-recipes": "Include Linked Recipes",
     "include-linked-recipe-ingredients": "Include Linked Recipe Ingredients",
-    "toggle-recipe": "Toggle Recipe"
+    "toggle-recipe": "Toggle Recipe",
+    "generate-image": "Generate AI image",
+    "generate-image-description": "Describe the image to generate.",
+    "generate-image-hint": "e.g. A high resolution photo of a spicy taco with fresh toppings on a wooden table."
   },
   "recipe-finder": {
     "recipe-finder": "Recipe Finder",

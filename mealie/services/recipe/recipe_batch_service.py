@@ -23,12 +23,12 @@ from mealie.schema.household.household import HouseholdInDB
 from mealie.schema.user.user import GroupInDB
 from mealie.services._base_service import BaseService
 from mealie.services.recipe.recipe_data_service import RecipeDataService
-from mealie.services.recipe.recipe_service import RecipeService
+from mealie.services.recipe.recipe_service import RecipeService, OpenAIRecipeService
 from mealie.services.openai import OpenAIService
 
 
-class RecipeBatchImageService(BaseService):
-    """Service for batch generating AI images for recipes without images."""
+class RecipeBatchService(BaseService):
+    """Service for batch operations on recipes (Image generation, Auto-tagging)."""
 
     report_entries: list[ReportEntryCreate]
 
@@ -245,4 +245,59 @@ class RecipeBatchImageService(BaseService):
             self._add_error_entry("Batch image generation failed", str(e))
 
         # Save all entries and update report status
+        self._save_all_entries()
+
+    async def auto_tag_all(self) -> None:
+        """
+        Scan all recipes in the household and auto-tag them using OpenAI.
+        """
+        sem = asyncio.Semaphore(5)
+
+        openai_service = OpenAIRecipeService(
+            self.repos, self.recipe_service.user, self.household, self.translator
+        )
+
+        async def _auto_tag_recipe(recipe: Recipe) -> None:
+            async with sem:
+                try:
+                    await openai_service.auto_tag_recipe(recipe.slug)
+                    
+                    self._add_success_entry(f"Successfully auto-tagged recipe: {recipe.name}")
+                    self.logger.info(f"Auto-tagged recipe {recipe.slug}")
+
+                except Exception as e:
+                    self.logger.error(f"Failed to auto-tag recipe {recipe.slug}: {e}")
+                    self._add_error_entry(
+                        f"Failed to auto-tag recipe '{recipe.name}' ({recipe.slug})", str(e)
+                    )
+
+        # Initialize report
+        if self.report is None:
+            report = ReportCreate(
+                name="Batch Auto-Tagging",
+                category=ReportCategory.default, 
+                status=ReportSummaryStatus.in_progress,
+                group_id=self.group.id,
+            )
+            self.report = self.repos.group_reports.create(report)
+
+
+        try:
+            all_recipes = self.repos.recipes.get_all()
+
+            if not all_recipes:
+                self._add_success_entry("No recipes found to process")
+                self._save_all_entries()
+                return
+
+            self.logger.info(f"Auto-tagging {len(all_recipes)} recipes...")
+
+            tasks = [_auto_tag_recipe(recipe) for recipe in all_recipes]
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+        except Exception as e:
+            self.logger.error(f"Failed during batch auto-tagging: {e}")
+            self.logger.exception(e)
+            self._add_error_entry("Batch auto-tagging failed", str(e))
+
         self._save_all_entries()

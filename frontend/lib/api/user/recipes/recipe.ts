@@ -168,6 +168,10 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
     return this.requests.post<{ reportId: string }>("/api/recipes/images/generate-missing", {});
   }
 
+  autoTagAll() {
+    return this.requests.post<{ reportId: string }>("/api/recipes/actions/auto-tag-all", {});
+  }
+
   async testCreateOneUrl(url: string, useOpenAI = false) {
     return await this.requests.post<Recipe | null>(routes.recipesTestScrapeUrl, { url, useOpenAI });
   }

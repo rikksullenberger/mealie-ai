@@ -97,7 +97,9 @@
 </template>
 
 <script lang="ts">
-import { useAdminApi } from "~/composables/api";
+
+import { useAdminApi, useUserApi } from "~/composables/api";
+import { alert } from "~/composables/use-toast";
 import type { MaintenanceStorageDetails, MaintenanceSummary } from "~/lib/api/types/admin";
 
 export default defineNuxtComponent({
@@ -114,6 +116,8 @@ export default defineNuxtComponent({
     });
 
     const adminApi = useAdminApi();
+    const userApi = useUserApi();
+    const notifier = alert;
     const i18n = useI18n();
 
     // Set page title
@@ -211,6 +215,34 @@ export default defineNuxtComponent({
       state.actionLoading = false;
     }
 
+    async function handleGenerateMissingImages() {
+      state.actionLoading = true;
+      try {
+        const { data } = await userApi.recipes.generateMissingImages();
+        notifier.info(
+          `Started generating missing images. Report ID: ${data.reportId}`,
+          { title: "Background Task Started" }
+        );
+      } catch (e) {
+        // error handled by api interceptor usually, but safe to catch
+      }
+      state.actionLoading = false;
+    }
+
+    async function handleAutoTagAll() {
+      state.actionLoading = true;
+      try {
+        const { data } = await userApi.recipes.autoTagAll();
+        notifier.info(
+          `Started batch auto-tagging. Report ID: ${data.reportId}`,
+          { title: "Background Task Started" }
+        );
+      } catch (e) {
+        // error handled by api interceptor
+      }
+      state.actionLoading = false;
+    }
+
     const actions = [
       {
         name: i18n.t("admin.maintenance.action-clean-directories-name"),
@@ -226,6 +258,16 @@ export default defineNuxtComponent({
         name: i18n.t("admin.maintenance.action-clean-images-name"),
         handler: handleCleanImages,
         subtitle: i18n.t("admin.maintenance.action-clean-images-description"),
+      },
+      {
+        name: i18n.t("admin.maintenance.action-generate-missing-images-name"),
+        handler: handleGenerateMissingImages,
+        subtitle: i18n.t("admin.maintenance.action-generate-missing-images-description"),
+      },
+      {
+        name: i18n.t("admin.maintenance.action-auto-tag-all-name"),
+        handler: handleAutoTagAll,
+        subtitle: i18n.t("admin.maintenance.action-auto-tag-all-description"),
       },
     ];
 

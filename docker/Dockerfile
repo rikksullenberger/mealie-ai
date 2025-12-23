@@ -10,7 +10,7 @@ COPY frontend .
 
 RUN yarn install \
     --prefer-offline \
-    --frozen-lockfile \
+     \
     --non-interactive \
     --production=false \
     # https://github.com/docker/build-push-action/issues/471
