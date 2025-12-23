@@ -15,6 +15,7 @@ This is a modified version of the excellent **Mealie** recipe management applica
 This fork adds **comprehensive AI-powered recipe management** features:
 
 #### Latest Updates
+- **v3.8.15**: **Security Fix**: Fixed CVE-2025-66418 (urllib3/DoS vulnerability).
 - **v3.8.14**: **Security Fix**: Updated `urllib3` to fix CVE-2025-66471 (DoS vulnerability).
 - **v3.8.13**: Updated mealie core to mealie 3.8, Minor bug fixes, Added ARM64 support
 - **v3.5.15**: Added **ARM64 Support** (e.g., Raspberry Pi), Security updates (CVE-2025-68146, **Fixed CVE-2025-8869**), Python 3.13 support, and dependency refreshes
