@@ -10,13 +10,21 @@ COPY frontend .
 
 RUN yarn install \
     --prefer-offline \
-     \
+    \
     --non-interactive \
     --production=false \
     # https://github.com/docker/build-push-action/issues/471
     --network-timeout 1000000
 
+
 RUN yarn generate
+
+###############################################
+# Go Builder (gosu)
+###############################################
+FROM golang:alpine AS gosu-builder
+RUN go install github.com/tianon/gosu@latest
+
 
 ###############################################
 # Base Image - Python
@@ -120,7 +128,7 @@ ENV GIT_COMMIT_HASH=$COMMIT
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
-    gosu \
+    dos2unix \
     iproute2 \
     libldap-common \
     libldap2 \
@@ -128,6 +136,10 @@ RUN apt-get update \
 
 # create directory used for Docker Secrets
 RUN mkdir -p /run/secrets
+
+# Install gosu from builder
+COPY --from=gosu-builder /go/bin/gosu /usr/bin/gosu
+
 
 # Copy venv into image. It contains a fully-installed mealie backend and frontend.
 COPY --from=venv-builder $VENV_PATH $VENV_PATH
