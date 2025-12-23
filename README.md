@@ -15,6 +15,7 @@ This is a modified version of the excellent **Mealie** recipe management applica
 This fork adds **comprehensive AI-powered recipe management** features:
 
 #### Latest Updates
+- **v3.8.18**: **Security Fixes**: Fixed CVE-2025-61724 & 58183 (Go Runtime), CVE-2025-9231 & 9232 (OpenSSL), and CVE-2025-58050 (PCRE2) via system and runtime updates.
 - **v3.8.17**: **Security Fixes**: Fixed 10+ CVEs including `filelock` (CVE-2025-68146), `pip` (CVE-2025-8869), OpenSSL (CVE-2025-9230), and Go Runtime (CVE-2025-61729 etc.).
 - **v3.8.16**: **Security Fix**: Updated `gosu` (built from source) to fix Go runtime vulnerabilities (CVE-2025-61723, 58187, 61725, 58188).
 - **v3.8.15**: **Security Fix**: Fixed CVE-2025-66418 (urllib3/DoS vulnerability).
