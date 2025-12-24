@@ -49,6 +49,9 @@ RUN useradd -u 911 -U -d $MEALIE_HOME -s /bin/bash abc \
     && usermod -G users abc \
     && mkdir $MEALIE_HOME
 
+# Upgrade pip to fix CVE-2025-8869
+RUN pip install --upgrade pip
+
 ###############################################
 # Backend Package Build
 ###############################################

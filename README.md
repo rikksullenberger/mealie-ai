@@ -26,6 +26,7 @@ Official Docker images are available on Docker Hub:
 **Now with ARM64 support!** This release includes multi-arch images, supporting **Raspberry Pi** and other ARM64 devices alongside standard AMD64 systems.
 
 #### Latest Updates
+- **v3.8.19**: **Security Fix**: Fixed CVE-2025-8869 (pip) by upgrading to pip >= 25.2.
 - **v3.8.18**: **Security Fixes**: Fixed CVE-2025-61724 & 58183 (Go Runtime), CVE-2025-9231 & 9232 (OpenSSL), and CVE-2025-58050 (PCRE2) via system and runtime updates.
 - **v3.8.17**: **Security Fixes**: Fixed 10+ CVEs including `filelock` (CVE-2025-68146), `pip` (CVE-2025-8869), OpenSSL (CVE-2025-9230), and Go Runtime (CVE-2025-61729 etc.).
 - **v3.8.16**: **Security Fix**: Updated `gosu` (built from source) to fix Go runtime vulnerabilities (CVE-2025-61723, 58187, 61725, 58188).
