@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import datetime
+import re
 from numbers import Number
 from pathlib import Path
 from typing import Annotated, Any, ClassVar
@@ -130,6 +131,41 @@ class CreateRecipeAI(BaseModel):
     prompt: str
     include_image: bool = False
     auto_tag: bool = False
+
+    @field_validator("prompt")
+    @classmethod
+    def validate_prompt(cls, v: str) -> str:
+        if not v:
+            raise ValueError("Prompt cannot be empty")
+        # Remove excessive whitespace
+        v = " ".join(v.split())
+        if len(v) < 10:
+            raise ValueError("Prompt too short (minimum 10 characters)")
+        if len(v) > 2000:
+            raise ValueError("Prompt too long (maximum 2000 characters)")
+        # Block common prompt injection patterns
+        forbidden_patterns = [
+            "ignore instructions",
+            "system:",
+            "<script",
+            "javascript:",
+            "eval(",
+            "exec(",
+            "__import__",
+            "os.system",
+            "subprocess",
+            "import ",
+            "# !/",
+            "rm -rf",
+            "sudo ",
+            "DROP TABLE",
+            "DELETE FROM",
+        ]
+        v_lower = v.lower()
+        for pattern in forbidden_patterns:
+            if pattern in v_lower:
+                raise ValueError(f"Invalid content detected: '{pattern}' is not allowed in prompts")
+        return v
 
 
 class RegenerateRecipeImageAI(BaseModel):

@@ -49,6 +49,8 @@ from mealie.core import exceptions
 from mealie.core.dependencies import (
     get_temporary_zip_path,
 )
+from mealie.core.rate_limiter import rate_limiter
+from mealie.core.security_logger import log_ai_usage
 from mealie.pkgs import cache
 from mealie.repos.all_repositories import get_repositories
 from mealie.routes._base import controller
@@ -139,8 +141,9 @@ class RecipeController(BaseRecipeController):
         else:
             self.logger.error("Unknown Error on recipe controller action")
             self.logger.exception(ex)
+            # Do NOT leak internal exception details to client
             raise HTTPException(
-                status_code=500, detail=ErrorResponse.respond(message="Unknown Error", exception=ex.__class__.__name__)
+                status_code=500, detail=ErrorResponse.respond(message="An unexpected error occurred. Please try again later.")
             )
 
     async def _post_create_ai_actions(self, slug: str):
@@ -314,8 +317,10 @@ class RecipeController(BaseRecipeController):
         return recipe.slug
 
     @router.post("/create/ai", status_code=201, response_model=str)
-    async def create_recipe_from_ai(self, data: CreateRecipeAI, bg_tasks: BackgroundTasks):
+    async def create_recipe_from_ai(self, data: CreateRecipeAI, bg_tasks: BackgroundTasks, request: Request):
         """Create a recipe from an AI prompt"""
+        rate_limiter._check_rate_limit(request, ai_endpoint=True)
+
         if not self.settings.OPENAI_ENABLED:
             raise HTTPException(
                 status_code=400,
@@ -324,6 +329,13 @@ class RecipeController(BaseRecipeController):
 
         openai_recipe_service = OpenAIRecipeService(self.repos, self.user, self.household, self.translator)
         try:
+            log_ai_usage(
+                user_id=str(self.user.id),
+                ip_address=request.client.host if request.client else None,
+                endpoint="/recipes/create/ai",
+                prompt_length=len(data.prompt),
+                image_generated=data.include_image,
+            )
             recipe, image_data = await openai_recipe_service.generate_recipe_with_image(data.prompt, include_image=data.include_image)
             new_recipe = self.service.create_one(recipe)
 
@@ -361,11 +373,13 @@ class RecipeController(BaseRecipeController):
             )
 
     @router.post("/images/generate-missing", status_code=202)
-    def generate_missing_images(self, bg_tasks: BackgroundTasks):
+    def generate_missing_images(self, bg_tasks: BackgroundTasks, request: Request):
         """
         Scan all recipes in the household for missing images and generate AI images for them.
         This operation runs asynchronously in the background and returns a report ID for tracking progress.
         """
+        rate_limiter._check_rate_limit(request, ai_endpoint=True)
+
         if not self.settings.OPENAI_ENABLED:
             raise HTTPException(
                 status_code=400,
@@ -712,8 +726,10 @@ class RecipeController(BaseRecipeController):
             return None
 
     @router.post("/{slug}/image/ai-generate", tags=["Recipe: Images and Assets"])
-    async def generate_ai_recipe_image(self, slug: str):
+    async def generate_ai_recipe_image(self, slug: str, request: Request):
         """Generate an AI image for a recipe that doesn't have one"""
+        rate_limiter._check_rate_limit(request, ai_endpoint=True)
+
         if not (self.settings.OPENAI_ENABLED and self.settings.OPENAI_ENABLE_IMAGE_SERVICES):
             raise HTTPException(
                 status_code=400,
