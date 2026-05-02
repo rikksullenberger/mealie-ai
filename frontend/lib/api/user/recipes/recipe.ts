@@ -60,6 +60,7 @@ const routes = {
   recipesCreateFromZip: `${prefix}/recipes/create/zip`,
   recipesCreateFromImage: `${prefix}/recipes/create/image`,
   recipesCreateFromAI: `${prefix}/recipes/create/ai`,
+  recipesCreateFromYouTube: `${prefix}/recipes/create/youtube`,
   recipesCreateFromHtmlOrJson: `${prefix}/recipes/create/html-or-json`,
   recipesCategory: `${prefix}/recipes/category`,
   recipesParseIngredient: `${prefix}/parser/ingredient`,
@@ -223,6 +224,10 @@ export class RecipeAPI extends BaseCRUDAPI<CreateRecipe, Recipe, Recipe> {
 
   async createOneFromAI(prompt: string, includeImage = false, autoTag = false) {
     return await this.requests.post<string>(routes.recipesCreateFromAI, { prompt, include_image: includeImage, auto_tag: autoTag });
+  }
+
+  async createOneFromYouTube(url: string, includeImage = false, autoTag = false) {
+    return await this.requests.post<string>(routes.recipesCreateFromYouTube, { url, include_image: includeImage, auto_tag: autoTag });
   }
 
   async parseIngredients(parser: Parser, ingredients: Array<string>) {

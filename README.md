@@ -16,7 +16,7 @@ This is a modified version of the excellent **Mealie** recipe management applica
 
 This fork adds **comprehensive AI-powered recipe management** features with enterprise-grade security:
 
-### Latest Updates (v3.6.0)
+### Latest Updates (v3.6.2)
 
 #### Security Enhancements
 - **Rate Limiting**: Token bucket rate limiting on all AI endpoints (5 req/min per IP for AI, 30 req/min for standard)
@@ -26,6 +26,7 @@ This fork adds **comprehensive AI-powered recipe management** features with ente
 - **CVE Fixes**: Addresses CVE-2025-68146 and CVE-2025-8869
 
 #### Core AI Features
+- **YouTube Recipe Import**: Extract recipes from YouTube videos by analyzing the title and transcript using YouTube's public oEmbed API and `youtube-transcript-api`. No cookies or manual browser exports required — works directly from datacenter IPs.
 - **Recipe Remix/Variants**: Transform existing recipes with AI - make them healthier, change cuisines, adjust servings, or create fusion variations
 - **AI Recipe Generation**: Generate complete recipes from simple descriptions using GPT-4o-mini or GPT-3.5-turbo
 - **AI Image Generation**: Create professional food photography images using DALL-E 3
@@ -165,6 +166,62 @@ volumes:
 
 ---
 
+## YouTube Recipe Import
+
+Paste any YouTube cooking video URL and Mealie AI will extract the recipe from the video title, description, and spoken transcript.
+
+### How It Works
+1. Go to **Create Recipe → Import → YouTube**
+2. Paste the YouTube URL (supports `youtube.com`, `youtu.be`, `youtube-nocookie.com`, embeds, shorts, and live URLs)
+3. Choose options:
+   - **Generate Image** — create a DALL-E image for the recipe
+   - **Auto-tag** — automatically categorize the recipe
+   - **Stay in Edit Mode** — open the recipe editor after import for review
+4. Click **Import** — the backend uses YouTube's internal **Innertube API** (the same API used by the Android app) to fetch metadata, and `youtube-transcript-api` to grab captions. Everything is then fed to OpenAI for structured recipe parsing.
+
+### No Cookies Required
+
+This integration uses YouTube's **official oEmbed API** for metadata and `youtube-transcript-api` for captions:
+- **oEmbed API** — public, official, requires no authentication. Works from any IP.
+- **youtube-transcript-api** — fetches publicly available captions. Already included in dependencies.
+- Requires **no browser cookies** or manual cookie exports
+- Works **without sign-in** for public videos
+
+> **Note:** Age-restricted or private videos will fail (this is expected). Standard public cooking videos work fine.
+
+### What Gets Analyzed
+- **Video title** — for recipe name and cuisine hints
+- **English captions/transcript** — spoken instructions and ingredient mentions
+- The AI combines both sources and builds a structured recipe with ingredients, instructions, prep/cook times, and servings
+
+### Known Limitations
+- **No video description** — YouTube's oEmbed API does not include the description field. The transcript usually contains all the spoken recipe details.
+- **Transcript-only sources** — Some channels don't enable captions, in which case the AI works from the title alone (results may be less detailed).
+
+## License
+
+**Original Mealie:** © [Mealie](https://github.com/mealie-recipes/mealie) — AGPL-3.0
+
+**AI Fork Modifications:** © [Rikk Sullenberger](https://github.com/rikksullenberger) — AGPL-3.0
+
+This fork is released under the same AGPL-3.0 license as the original Mealie project.
+2. `/run/secrets/youtube_cookies` ← Docker Secret
+3. `/tmp/youtube_cookies.txt`
+4. `~/.config/yt-dlp/cookies.txt`
+5. `~/.cache/yt-dlp/cookies.txt`
+
+### YouTube Import Troubleshooting
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `Sign in to confirm you're not a bot` | Datacenter IP blocked by YouTube | Export browser cookies and place in container (see above) |
+| `Unable to read YouTube video metadata` | Video private, deleted, or region-blocked | Check the URL is valid and publicly accessible |
+| `No transcript was available` | Video has no captions | The service falls back to description-only parsing |
+| `429 Too Many Requests` | Rate limited by YouTube | Wait a few minutes; ensure cookies are provided |
+| Recipe is inaccurate | Description/transcript lacks recipe details | Try a video with explicit ingredient lists and steps |
+
+---
+
 ## Building from Source
 
 If you want to build the Docker image yourself:
@@ -214,6 +271,12 @@ Same as the original Mealie project. See [LICENSE](LICENSE) for details.
 ---
 
 ## Changelog
+
+### v3.6.2 (2026-05-01)
+- **Feature**: YouTube recipe import — paste a YouTube URL and extract recipes from video descriptions and transcripts
+- **AI**: Integrates `yt-dlp` and `youtube-transcript-api` with OpenAI for structured recipe parsing
+- **Security**: Rate limiting and input validation extended to `/create/youtube` endpoint
+- **Docs**: Updated README with YouTube import feature details
 
 ### v3.6.0 (2026-04-25)
 - **Security**: Added rate limiting, input validation, security audit logging, and error sanitization

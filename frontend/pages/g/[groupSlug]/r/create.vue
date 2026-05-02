@@ -71,6 +71,11 @@ export default defineNuxtComponent({
         value: "url",
       },
       {
+        icon: $globals.icons.linkVariantPlus,
+        text: i18n.t("new-recipe.import-from-youtube"),
+        value: "youtube",
+      },
+      {
         icon: $globals.icons.link,
         text: i18n.t("recipe.bulk-url-import"),
         value: "bulk",

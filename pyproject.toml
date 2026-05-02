@@ -1,6 +1,6 @@
 [project]
 name = "mealie"
-version = "3.6.1+ai"
+version = "3.6.2+ai"
 description = "A Recipe Manager"
 authors = [{ name = "Hayden", email = "hay-kot@pm.me" }]
 license = "AGPL-3.0-only"
@@ -54,6 +54,8 @@ dependencies = [
     "itsdangerous==2.2.0",
     "ingredient-parser-nlp==2.4.0",
     "urllib3>=2.6.3",
+    "yt-dlp>=2025.1.0",
+    "youtube-transcript-api>=0.6.0",
 ]
 
 [project.scripts]

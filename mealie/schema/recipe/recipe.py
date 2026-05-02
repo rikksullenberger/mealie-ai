@@ -168,6 +168,27 @@ class CreateRecipeAI(BaseModel):
         return v
 
 
+class CreateRecipeYouTube(BaseModel):
+    url: str
+    include_image: bool = False
+    auto_tag: bool = False
+
+    @field_validator("url")
+    @classmethod
+    def validate_youtube_url(cls, v: str) -> str:
+        if not v:
+            raise ValueError("YouTube URL cannot be empty")
+
+        v = v.strip()
+        if not re.match(r"^https?://", v, flags=re.IGNORECASE):
+            raise ValueError("YouTube URL must start with http:// or https://")
+
+        if not re.search(r"(youtube\.com|youtu\.be|youtube-nocookie\.com)", v, flags=re.IGNORECASE):
+            raise ValueError("URL must be a YouTube URL")
+
+        return v
+
+
 class RegenerateRecipeImageAI(BaseModel):
     custom_prompt: str | None = None
 

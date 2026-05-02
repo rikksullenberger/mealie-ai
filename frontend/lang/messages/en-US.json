@@ -455,7 +455,14 @@
     "generate-with-ai-description": "Describe a dish or a recipe, and Mealie AI will generate it for you using AI.",
     "describe-recipe-hint": "e.g. A spicy chicken curry with coconut milk",
     "generate": "Generate",
-    "generating": "Generating..."
+    "generating": "Generating...",
+    "import-from-youtube": "Import from YouTube",
+    "youtube-url": "YouTube URL",
+    "youtube-url-hint": "Paste a YouTube video link. Mealie AI will use the description and transcript to build a recipe.",
+    "import": "Import",
+    "importing-from-youtube": "Importing from YouTube...",
+    "generate-image": "Generate image",
+    "auto-tag-recipe": "Auto-tag recipe"
   },
   "page": {
     "404-page-not-found": "404 Page not found",
@@ -709,7 +716,8 @@
     "cover-image": "Cover image",
     "include-linked-recipes": "Include Linked Recipes",
     "include-linked-recipe-ingredients": "Include Linked Recipe Ingredients",
-    "toggle-recipe": "Toggle Recipe"
+    "toggle-recipe": "Toggle Recipe",
+    "import-from-youtube-description": "Import a recipe from a YouTube video. Mealie AI will extract recipe details from the video description and transcript, then create a recipe from them."
   },
   "recipe-finder": {
     "recipe-finder": "Recipe Finder",
