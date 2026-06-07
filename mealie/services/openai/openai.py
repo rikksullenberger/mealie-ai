@@ -178,7 +178,7 @@ class OpenAIService(BaseService):
             raise Exception(f"OpenAI Request Failed. {e.__class__.__name__}: {e}") from e
 
     async def generate_image(self, prompt: str) -> bytes | None:
-        """Generate an image using DALL-E 3 with Google AI watermark"""
+        """Generate an image using GPT Image with Google AI watermark"""
         if not self.enable_image_services:
             self.logger.warning("OpenAI image services are disabled")
             return None
@@ -188,23 +188,28 @@ class OpenAIService(BaseService):
             
             client = self.get_client()
             response = await client.images.generate(
-                model="dall-e-3",
+                model="gpt-image-2",
                 prompt=prompt,
-                size="1024x1024",
-                quality="standard",
                 n=1,
-                response_format="b64_json",
             )
 
             if not response.data:
                 return None
 
-            image_data = response.data[0].b64_json
-            if not image_data:
+            image_result = response.data[0]
+            image_data = image_result.b64_json
+            if image_data:
+                image_bytes = base64.b64decode(image_data)
+            elif image_result.url:
+                import httpx
+
+                async with httpx.AsyncClient(timeout=300) as http_client:
+                    image_response = await http_client.get(image_result.url)
+                    image_response.raise_for_status()
+                    image_bytes = image_response.content
+            else:
                 return None
 
-            image_bytes = base64.b64decode(image_data)
-            
             # Apply watermark to all AI-generated images
             try:
                 watermarked_bytes = apply_watermark(image_bytes)

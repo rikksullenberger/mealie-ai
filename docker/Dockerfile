@@ -21,7 +21,7 @@ RUN yarn generate
 ###############################################
 # Gosu Builder
 ###############################################
-FROM golang:alpine AS gosu-builder
+FROM golang:1.26.4-alpine AS gosu-builder
 RUN go install github.com/tianon/gosu@latest
 
 ###############################################
@@ -38,6 +38,13 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
     VENV_PATH="/opt/mealie"
+
+# Pull patched Debian packages from the base image repositories before Python
+# dependencies are installed. This keeps scanner findings for glibc/systemd and
+# other base packages from lingering when the upstream slim image is stale.
+RUN apt-get update \
+    && apt-get upgrade --no-install-recommends -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip to fix CVE-2025-8869
 RUN pip install --no-cache-dir --upgrade pip
